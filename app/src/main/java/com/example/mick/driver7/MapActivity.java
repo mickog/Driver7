@@ -20,6 +20,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     double lngMy;
     double latMy;
     String text;
+    String driver;
+    double newLat;
+    double newLon;
     String city = "";
     MapFragment mf;
     GoogleMap map;
@@ -34,6 +37,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Intent I = getIntent();
         text = I.getStringExtra("text");
         city = I.getStringExtra("city");
+        driver = I.getStringExtra("driver");
+        newLat = I.getDoubleExtra("lat",0.00);
+        newLat = I.getDoubleExtra("lat",0.00);
+
+        Toast.makeText(getApplicationContext(),"Inside map activity"+driver+" coor = "+newLat+" and "+newLat,Toast.LENGTH_LONG).show();
 
         mf = (MapFragment) getFragmentManager().findFragmentById(R.id.the_map);
         mf.getMapAsync(this);

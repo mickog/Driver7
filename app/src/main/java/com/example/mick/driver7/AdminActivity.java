@@ -28,13 +28,15 @@ import static android.R.id.list;
 
 public class AdminActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private TextView textViewPersons;
-    Button b;
+//    Button b;
     ListView listV;
     Driver[] items = new Driver[2];
 
     final List<Driver> driverList = new ArrayList<Driver>();
     ListView listView1;
-    List<String> array = new ArrayList<String>();
+    ArrayList<String> arrayNames = new ArrayList<String>();
+    ArrayList<String> optionList = new ArrayList<String>();
+
 
     /**************************** On Create Method for when class is creates************************/
     @Override
@@ -43,19 +45,20 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_admin);
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);
-        textViewPersons = (TextView) findViewById(R.id.adminViewPerson);
+//        textViewPersons = (TextView) findViewById(R.id.adminViewPerson);
+        optionList.add("VIEW DRIVERS");
+        optionList.add("LOG OUT");
         listView1 = (ListView) findViewById(R.id.lv);
+        ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,optionList);
+        listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(this);
 
-        b = (Button)findViewById(R.id.adminButton);
+//        b = (Button)findViewById(R.id.adminButton);
 
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
                 showListView();
-                Toast.makeText(getApplicationContext(),"in here",Toast.LENGTH_LONG).show();
-            }
-        });
+//                Toast.makeText(getApplicationContext(),"in here",Toast.LENGTH_LONG).show();
+
 
     }
 
@@ -68,6 +71,8 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 //        ref.child("Driver2").push().setValue(d);
 //        ref.child("Driver3").setValue(d);
 
+
+        String[]names;
         //adding a value event listener so if data in database changes it does in textview also not needed at the minute
         ref.child("Driver").addValueEventListener(new ValueEventListener() {
             @Override
@@ -77,14 +82,25 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
                     Driver d = postSnapshot.getValue(Driver.class);
                     String details = "Name : " + d.getName() + "\nLatitude : " + d.getLat() + "\nLongitude : " + d.getLon();
 //                    Toast.makeText(getApplicationContext(),"Drivers name is "+d.getName(),Toast.LENGTH_SHORT).show();
-                    textViewPersons.setText(details);
+//                    textViewPersons.setText(details);
                     driverList.add(d);
-
+                    arrayNames.add(d.getName());
                     ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,driverList);
-
-                    listView1.setAdapter(adapter);
+//                    listView1.setAdapter(adapter);
 
                 }
+
+//                Driver d = driverList.get(0);
+////                Toast.makeText(this,"Clicked Driver "+d.getName()+" Lat is "+d.getLat()+" Lon is"+d.getLon(), Toast.LENGTH_SHORT).show();
+//                Intent intent=new Intent(AdminActivity.this,MapA.class);
+//                intent.putStringArrayListExtra("arrayNames", arrayNames);
+//                intent.putExtra("text", "text");
+//                intent.putExtra("city", "city");
+//                intent.putExtra("driver", d.getName());
+//                intent.putExtra("lat", d.getLat());
+//                intent.putExtra("lon", d.getLon());
+//                startActivity(intent);
+
 
             }
 
@@ -103,10 +119,16 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Driver d = driverList.get(position);
-        Toast.makeText(this,"Clicked Driver "+d.getName()+" Lat is "+d.getLat()+" Lon is"+d.getLon(), Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(view.getContext(),MapA.class);
+//        Toast.makeText(this,"Clicked Driver "+d.getName()+" Lat is "+d.getLat()+" Lon is"+d.getLon(), Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this,"Array names admin"+arrayNames.get(1),Toast.LENGTH_SHORT).show();
+        Intent intent=new Intent(this,MapA.class);
+        intent.putStringArrayListExtra("arrayNames", arrayNames);
         intent.putExtra("text", "text");
         intent.putExtra("city", "city");
+        intent.putExtra("driver", d.getName());
+        intent.putExtra("lat", d.getLat());
+        intent.putExtra("lon", d.getLon());
         startActivity(intent);
 
     }

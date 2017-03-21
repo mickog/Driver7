@@ -17,17 +17,33 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MapA extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationChangeListener  {
 
     String text;
     double lngMy;
     double latMy;
+    String driver;
+    double newLat;
+    double newLon;
     String city = "";
     MapFragment mf;
     GoogleMap map;
+    ArrayList<String> test;
+    public ArrayList getMyData()
+    {
+        Intent I = getIntent();
+        text = I.getStringExtra("text");
+        city = I.getStringExtra("city");
+        driver = I.getStringExtra("driver");
+        newLat = I.getDoubleExtra("lat",0.00);
+        newLat = I.getDoubleExtra("lat",0.00);
+        test = I.getStringArrayListExtra("arrayNames");
+        Toast.makeText(this,"Array names mapA "+test.get(1),Toast.LENGTH_SHORT).show();
 
-
+        return test;
+    }
     public String setLoc() {
         InputStream is;
 
@@ -59,7 +75,6 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback, Googl
             // and pass it the info about the selected item
             text = setLoc();
             Intent intent = new Intent(this, MapActivity.class);
-
             intent.putExtra("text", text);
             intent.putExtra("city", city);
 

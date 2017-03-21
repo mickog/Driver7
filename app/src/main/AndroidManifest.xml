@@ -32,6 +32,7 @@
 
         <service android:name=".LocationService" />
 
+        <activity android:name=".PassDetailsActvity"></activity>
     </application>
 
 </manifest>

@@ -9,22 +9,22 @@
     tools:context="com.example.mick.driver7.AdminActivity">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/stop"
-        android:layout_marginTop="42dp"
-        android:id="@+id/adminViewPerson"
-         />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/stop"-->
+        <!--android:layout_marginTop="42dp"-->
+        <!--android:id="@+id/adminViewPerson"-->
+         <!--/>-->
 
-    <Button
-        android:text="SHOW"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="31dp"
-        android:id="@+id/adminButton"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/textViewPersons" />
+    <!--<Button-->
+        <!--android:text="SHOW"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="31dp"-->
+        <!--android:id="@+id/adminButton"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_toEndOf="@+id/textViewPersons" />-->
 
     <ListView
         android:layout_width="match_parent"
