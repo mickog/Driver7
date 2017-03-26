@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    boolean flag= true;
     String latString;
     String lonString;
     String name = "";
@@ -63,12 +64,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         latString = test.get(finalI);
                         lonString = test1.get(finalI);
 
-                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
                         double lat = Double.parseDouble(latString);
                         double lon = Double.parseDouble(lonString);
                         map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
-                        map.moveCamera(CameraUpdateFactory.zoomTo(10));
-                map.addMarker(new MarkerOptions()
+                       // map.moveCamera(CameraUpdateFactory.zoomTo(100));
+                        LatLng toPosition = new LatLng(lat, lon);
+                        if(flag) {
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(toPosition, 70));
+                            flag=false;
+                        }
+                        map.clear();
+                        map.addMarker(new MarkerOptions()
                         .position(new LatLng(lat, lon))
                         .title("")
                 );

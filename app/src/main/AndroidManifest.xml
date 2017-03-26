@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+
+        android:name="android.support.multidex.MultiDexApplication" >
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,23 +18,32 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVyujWsd90ek7p2olB_BYbSUcExeRxF64" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat" >
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegistrationActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".AdminActivity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".MapA" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".RegistrationActivity"
+            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".LoginActivity"
+            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".AdminActivity"
+            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".MapActivity"
+            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".MapA"
+            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".ProfileActivity"
+            android:theme="@style/Theme.AppCompat"/>
 
-        <service android:name=".LocationService" />
+        <service android:name=".LocationService"
+            android:theme="@style/Theme.AppCompat"/>
 
-        <activity android:name=".PassDetailsActvity"></activity>
+        <activity android:name=".PassDetailsActvity"
+            android:theme="@style/Theme.AppCompat"></activity>
     </application>
 
 </manifest>

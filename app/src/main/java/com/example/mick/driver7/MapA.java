@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class MapA extends AppCompatActivity implements OnMapReadyCallback {
 
+    boolean flag = true;
+
     String latString;
     String lonString;
     String name = "";
@@ -66,7 +68,6 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
         map.clear();
         // code to run when the map has loaded
         double lat, lon;
-
         for (int i = 0; i < arrayNames.size(); i++) {
 
             if (name.equals(arrayNames.get(i))) {
@@ -80,11 +81,16 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
                         latString = test.get(finalI);
                         lonString = test1.get(finalI);
 
-                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
                         double lat = Double.parseDouble(latString);
                         double lon = Double.parseDouble(lonString);
                         map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
-                        map.moveCamera(CameraUpdateFactory.zoomTo(10));
+                        LatLng toPosition = new LatLng(lat, lon);
+                        if(flag) {
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(toPosition, 70));
+                            flag=false;
+                        }
+                        map.clear();
                         map.addMarker(new MarkerOptions()
                                 .position(new LatLng(lat, lon))
                                 .title("")
@@ -94,22 +100,6 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
                         //go crazy
                     }
                 });
-                Toast.makeText(getApplicationContext(), "lat string ok non an is " + latString, Toast.LENGTH_SHORT).show();
-
-//                latString = appState.getLat(i);
-//                lonString = appState.getLon(i);
-//                lat = Double.parseDouble(latString);
-//                lon = Double.parseDouble(lonString);
-//                lat = Double.parseDouble(arrayLat.get(i));
-//                lon = Double.parseDouble(arrayLon.get(i));
-//                Toast.makeText(getApplicationContext(), "That name was " + name, Toast.LENGTH_SHORT).show();
-//                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
-//                map.moveCamera(CameraUpdateFactory.zoomTo(10));
-//                map.addMarker(new MarkerOptions()
-//                        .position(new LatLng(lat, lon))
-//                        .title("")
-//                );
-
             }
         }
     }

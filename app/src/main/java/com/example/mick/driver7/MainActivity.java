@@ -6,6 +6,7 @@ package com.example.mick.driver7;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MultiDex.install(this);
     }
     public void btnRegistration_Click(View v) {
         Intent i = new Intent(com.example.mick.driver7.MainActivity.this, RegistrationActivity.class);
