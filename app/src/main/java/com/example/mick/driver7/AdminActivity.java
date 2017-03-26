@@ -34,7 +34,9 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
     final List<Driver> driverList = new ArrayList<Driver>();
     ListView listView1;
-    ArrayList<String> arrayNames = new ArrayList<String>();
+    ArrayList<String> arrayNames;
+    ArrayList<String> arrayLat;
+    ArrayList<String> arrayLon;
     ArrayList<String> optionList = new ArrayList<String>();
 
 
@@ -77,6 +79,9 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         ref.child("Driver").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                arrayNames = new ArrayList<String>();
+                arrayLat = new ArrayList<String>();
+                arrayLon = new ArrayList<String>();
 
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Driver d = postSnapshot.getValue(Driver.class);
@@ -85,6 +90,8 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 //                    textViewPersons.setText(details);
                     driverList.add(d);
                     arrayNames.add(d.getName());
+                    arrayLat.add(Double.toString(d.getLat()));
+                    arrayLon.add(Double.toString(d.getLon()));
                     ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,driverList);
 //                    listView1.setAdapter(adapter);
 
@@ -95,7 +102,7 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 //                Intent intent=new Intent(AdminActivity.this,MapA.class);
 //                intent.putStringArrayListExtra("arrayNames", arrayNames);
 //                intent.putExtra("text", "text");
-//                intent.putExtra("city", "city");
+//                intent.putExtra("name", "name");
 //                intent.putExtra("driver", d.getName());
 //                intent.putExtra("lat", d.getLat());
 //                intent.putExtra("lon", d.getLon());
@@ -124,12 +131,17 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         Toast.makeText(this,"Array names admin"+arrayNames.get(1),Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(this,MapA.class);
         intent.putStringArrayListExtra("arrayNames", arrayNames);
-        intent.putExtra("text", "text");
-        intent.putExtra("city", "city");
-        intent.putExtra("driver", d.getName());
-        intent.putExtra("lat", d.getLat());
-        intent.putExtra("lon", d.getLon());
+        intent.putStringArrayListExtra("arrayLat", arrayLat);
+        intent.putStringArrayListExtra("arrayLon", arrayLon);
         startActivity(intent);
 
+    }
+
+    public ArrayList getMyData()
+    {
+        String test1 = "hello world";
+        ArrayList list = new ArrayList();
+        list.add(test1);
+        return list;
     }
 }

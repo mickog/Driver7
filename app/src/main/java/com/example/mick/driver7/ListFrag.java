@@ -50,7 +50,7 @@ public class ListFrag extends Fragment {
                         public void onItemClick(AdapterView<?> list, View row, int index, long rowID) {
                             // code to run when user clicks that item
                             // launch new Activity with holes details
-                            ((MapA) getActivity()).setCity((String) list.getItemAtPosition(index));
+                            ((MapA) getActivity()).setDriverName((String) list.getItemAtPosition(index));
 
                             ((MapA) getActivity()).showMap();
 

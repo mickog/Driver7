@@ -15,18 +15,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationChangeListener {
+import java.util.ArrayList;
 
-    double lngMy;
-    double latMy;
-    String text;
-    String driver;
-    double newLat;
-    double newLon;
-    String city = "";
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    String name = "";
     MapFragment mf;
     GoogleMap map;
-
+    ArrayList<String> arrayNames;
+    ArrayList<String> arrayLat;
+    ArrayList<String> arrayLon;
 
 
     @Override
@@ -35,14 +33,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_map);
 
         Intent I = getIntent();
-        text = I.getStringExtra("text");
-        city = I.getStringExtra("city");
-        driver = I.getStringExtra("driver");
-        newLat = I.getDoubleExtra("lat",0.00);
-        newLat = I.getDoubleExtra("lat",0.00);
-
-        Toast.makeText(getApplicationContext(),"Inside map activity"+driver+" coor = "+newLat+" and "+newLat,Toast.LENGTH_LONG).show();
-
+        arrayNames = I.getStringArrayListExtra("arrayNames");
+        arrayLat = I.getStringArrayListExtra("arrayLat");
+        arrayLon = I.getStringArrayListExtra("arrayLon");
+        name = I.getStringExtra("name");
         mf = (MapFragment) getFragmentManager().findFragmentById(R.id.the_map);
         mf.getMapAsync(this);
     }
@@ -50,39 +44,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap map) {    // map is loaded but not laid out yet
         this.map = map;
-//        map.clear();
+        map.clear();
         // code to run when the map has loaded
-        String[] separated = text.split(" ");
         double lat, lon;
-//        if (city.equals(separated[0])) {
-////            Toast.makeText(this, city+" getting into dublin in map activity",Toast.LENGTH_LONG ).show();
-//
-//            lat = Double.parseDouble(separated[1]);
-//
-//            lon = Double.parseDouble(separated[2]);
-//        } else if (city.equals(separated[3])) {
-//            lat = Double.parseDouble(separated[4]);
-//            lon = Double.parseDouble(separated[5]);
-//        }
-//        else {
-//            lat = 0;
-//            lon = 0;
-//        }
-        if (!city.equals("My Location")) {
-            map.addMarker(new MarkerOptions()
-                    .position(new LatLng(53.4013419, -6.408903))
-                    .title("")
-            );
 
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(53.4013419, -6.408903)));
-            map.moveCamera(CameraUpdateFactory.zoomTo(10));
+        for (int i = 0; i < arrayNames.size(); i++) {
 
-        }
-        if (city.equals("My Location")) {
+            if (name.equals(arrayNames.get(i))) {
+                lat = Double.parseDouble(arrayLat.get(i));
+                lon = Double.parseDouble(arrayLon.get(i));
+                Toast.makeText(getApplicationContext(), "That name was " + name, Toast.LENGTH_SHORT).show();
+                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+                map.moveCamera(CameraUpdateFactory.zoomTo(10));
+                map.addMarker(new MarkerOptions()
+                        .position(new LatLng(lat, lon))
+                        .title("")
+                );
 
-            map.setMyLocationEnabled(true);
-            Location myLocation = map.getMyLocation();
-            map.setOnMyLocationChangeListener(this);
+            }
         }
     }
     @Override
@@ -107,19 +86,4 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onMyLocationChange(Location location) {
-        latMy = location.getLatitude();
-        lngMy = location.getLongitude();
-
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(latMy, lngMy))
-                .title("")
-        );
-        Toast.makeText(getApplicationContext(),"Co or are "+latMy+" and "+lngMy,Toast.LENGTH_LONG).show();
-        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(latMy, lngMy)));
-        map.moveCamera(CameraUpdateFactory.zoomTo(100));
-        map.setOnMyLocationChangeListener(null);
-
-    }
 }
