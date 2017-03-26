@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    String latString;
+    String lonString;
     String name = "";
     MapFragment mf;
     GoogleMap map;
@@ -42,7 +44,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(GoogleMap map) {    // map is loaded but not laid out yet
+    public void onMapReady(final GoogleMap map) {    // map is loaded but not laid out yet
         this.map = map;
         map.clear();
         // code to run when the map has loaded
@@ -51,15 +53,45 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         for (int i = 0; i < arrayNames.size(); i++) {
 
             if (name.equals(arrayNames.get(i))) {
-                lat = Double.parseDouble(arrayLat.get(i));
-                lon = Double.parseDouble(arrayLon.get(i));
-                Toast.makeText(getApplicationContext(), "That name was " + name, Toast.LENGTH_SHORT).show();
-                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
-                map.moveCamera(CameraUpdateFactory.zoomTo(10));
+                AdminActivity appState = new AdminActivity();
+                final int finalI = i;
+                appState.getLat(i, new SnapShotListener(){
+                    public void onListFilled(ArrayList<String> arrayLat,ArrayList<String> arrayLon){
+                        AdminActivity appState1 = new AdminActivity();
+                        ArrayList<String> test = arrayLat;
+                        ArrayList<String> test1 = arrayLon;
+                        latString = test.get(finalI);
+                        lonString = test1.get(finalI);
+
+                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
+                        double lat = Double.parseDouble(latString);
+                        double lon = Double.parseDouble(lonString);
+                        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+                        map.moveCamera(CameraUpdateFactory.zoomTo(10));
                 map.addMarker(new MarkerOptions()
                         .position(new LatLng(lat, lon))
                         .title("")
                 );
+                    }
+                    public void onFailure(){
+                        //go crazy
+                    }
+                });
+                Toast.makeText(getApplicationContext(), "lat string ok non an is " + latString, Toast.LENGTH_SHORT).show();
+
+//                latString = appState.getLat(i);
+//                lonString = appState.getLon(i);
+//                lat = Double.parseDouble(latString);
+//                lon = Double.parseDouble(lonString);
+//                lat = Double.parseDouble(arrayLat.get(i));
+//                lon = Double.parseDouble(arrayLon.get(i));
+//                Toast.makeText(getApplicationContext(), "That name was " + name, Toast.LENGTH_SHORT).show();
+//                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
+//                map.moveCamera(CameraUpdateFactory.zoomTo(10));
+//                map.addMarker(new MarkerOptions()
+//                        .position(new LatLng(lat, lon))
+//                        .title("")
+//                );
 
             }
         }
