@@ -19,35 +19,34 @@ import java.util.ArrayList;
 
 public class MapA extends AppCompatActivity implements OnMapReadyCallback {
 
-    boolean flag = true;
+    //declare and initialise variables
 
-    String latString;
+    boolean flag = true;    //flag boolean so camera doesn't keep zooming
+
+    String latString;   //String for lat and lon because its easier to transfer
     String lonString;
-    String name = "";
-    MapFragment mf;
+    String name = "";   //String to see which driver selected
+    MapFragment mf;     //map fragment to be used in landscape or portrair
     GoogleMap map;
-    ArrayList<String> arrayNames;
+    ArrayList<String> arrayNames;   //array list to initially transfer in the data
     ArrayList<String> arrayLat;
     ArrayList<String> arrayLon;
     public ArrayList getMyData()
     {
+        //method to receive data from here
         Intent I = getIntent();
         arrayNames = I.getStringArrayListExtra("arrayNames");
         arrayLat = I.getStringArrayListExtra("arrayLat");
         arrayLon = I.getStringArrayListExtra("arrayLon");
-//        Toast.makeText(this,"Array names mapA "+arrayNames.get(1),Toast.LENGTH_SHORT).show();
         name = arrayNames.get(1);
-
         return arrayNames;
     }
 
     public void showMap() {
         mf = (MapFragment) getFragmentManager().findFragmentById(R.id.the_map);
         if (mf == null) {
-
-            // Frag isn't in layout so start axctivity
-            // so start MapActivity (Activity B)
-            // and pass it the info about the selected item
+            // If the map frag isnt in the view then we know we can start map activity
+            // and pass it the arrays to be used on intial start up
             Intent intent = new Intent(this, MapActivity.class);
             intent.putStringArrayListExtra("arrayNames", arrayNames);
             intent.putStringArrayListExtra("arrayLat", arrayLat);
@@ -55,9 +54,8 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
             intent.putExtra("name", name);
             startActivity(intent);
         } else {
-            // CityMApFragment (Fragment B) is in the layout (tablet layout)
+            // or else we are using the landscape mode
             mf.getMapAsync(this);
-
         }
     }
 
@@ -65,23 +63,30 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
     public void onMapReady(final GoogleMap map) {    // map is loaded but not laid out yet
 
         this.map = map;
+        //clear any of the markers and stuff off the map
         map.clear();
         // code to run when the map has loaded
         double lat, lon;
+
+        //loop through the names array and see if any of them match off what was selected from list
         for (int i = 0; i < arrayNames.size(); i++) {
 
+            //if the name from the list matches any of the names in the array that was passed into activity
             if (name.equals(arrayNames.get(i))) {
+                //create a enw instance of AdminActiviy (because we can fetch co ordinates from here)
                 AdminActivity appState = new AdminActivity();
+                //i will need to be final because using it in inner class
                 final int finalI = i;
+
+                //call the method to get the coordinates, which takes the index and the new interface
+                //because this all needs to be done async
                 appState.getLat(i, new SnapShotListener(){
                     public void onListFilled(ArrayList<String> arrayLat,ArrayList<String> arrayLon){
                         AdminActivity appState1 = new AdminActivity();
-                        ArrayList<String> test = arrayLat;
-                        ArrayList<String> test1 = arrayLon;
-                        latString = test.get(finalI);
-                        lonString = test1.get(finalI);
-
-//                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
+//                        ArrayList<String> test = arrayLat;
+//                        ArrayList<String> test1 = arrayLon;
+                        latString = arrayLat.get(finalI);
+                        lonString = arrayLon.get(finalI);
                         double lat = Double.parseDouble(latString);
                         double lon = Double.parseDouble(lonString);
                         map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
@@ -109,28 +114,6 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
         setContentView(R.layout.main);
 
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_city_map, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void setDriverName(String itemAtPosition) {

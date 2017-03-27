@@ -59,10 +59,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 appState.getLat(i, new SnapShotListener(){
                     public void onListFilled(ArrayList<String> arrayLat,ArrayList<String> arrayLon){
                         AdminActivity appState1 = new AdminActivity();
-                        ArrayList<String> test = arrayLat;
-                        ArrayList<String> test1 = arrayLon;
-                        latString = test.get(finalI);
-                        lonString = test1.get(finalI);
+//                        ArrayList<String> test = arrayLat;
+
+                        latString = arrayLat.get(finalI);
+                        lonString = arrayLon.get(finalI);
 
 //                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
                         double lat = Double.parseDouble(latString);
@@ -86,43 +86,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 });
                 Toast.makeText(getApplicationContext(), "lat string ok non an is " + latString, Toast.LENGTH_SHORT).show();
 
-//                latString = appState.getLat(i);
-//                lonString = appState.getLon(i);
-//                lat = Double.parseDouble(latString);
-//                lon = Double.parseDouble(lonString);
-//                lat = Double.parseDouble(arrayLat.get(i));
-//                lon = Double.parseDouble(arrayLon.get(i));
-//                Toast.makeText(getApplicationContext(), "That name was " + name, Toast.LENGTH_SHORT).show();
-//                map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lon)));
-//                map.moveCamera(CameraUpdateFactory.zoomTo(10));
-//                map.addMarker(new MarkerOptions()
-//                        .position(new LatLng(lat, lon))
-//                        .title("")
-//                );
 
             }
         }
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_map, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
 }

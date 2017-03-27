@@ -8,6 +8,4 @@ public class Config {
 
     public static final String FIREBASE_URL = "https://driver7-31934.firebaseio.com/";
 
-
-
 }

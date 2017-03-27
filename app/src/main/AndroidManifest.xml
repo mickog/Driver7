@@ -19,7 +19,9 @@
             android:value="AIzaSyBVyujWsd90ek7p2olB_BYbSUcExeRxF64" />
 
         <activity android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat" >
+            android:label="LOCATE DRIVERS"
+            android:theme="@style/Theme.AppCompat"
+            >
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,23 +29,27 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistrationActivity"
+            android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".LoginActivity"
+            android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".AdminActivity"
+            android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".MapActivity"
+            android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".MapA"
+            android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
         <activity android:name=".ProfileActivity"
+            android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
 
         <service android:name=".LocationService"
             android:theme="@style/Theme.AppCompat"/>
 
-        <activity android:name=".PassDetailsActvity"
-            android:theme="@style/Theme.AppCompat"></activity>
     </application>
 
 </manifest>

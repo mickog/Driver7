@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
     /**************************** On Create Method for when class is creates************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
         //set the context sp we can use firebase
@@ -94,18 +96,6 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
                 }
 
-//                Driver d = driverList.get(0);
-////                Toast.makeText(this,"Clicked Driver "+d.getName()+" Lat is "+d.getLat()+" Lon is"+d.getLon(), Toast.LENGTH_SHORT).show();
-//                Intent intent=new Intent(AdminActivity.this,MapA.class);
-//                intent.putStringArrayListExtra("arrayNames", arrayNames);
-//                intent.putExtra("text", "text");
-//                intent.putExtra("name", "name");
-//                intent.putExtra("driver", d.getName());
-//                intent.putExtra("lat", d.getLat());
-//                intent.putExtra("lon", d.getLon());
-//                startActivity(intent);
-
-
             }
 
             /************had to implement this method****************/
@@ -144,12 +134,6 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-//    public String getLat(int i) {
-//        fillDriverList();
-//        arrayLat.get(1);
-//        return"0.000";
-//
-//    }
     public String getLon(int i) {
 //        fillDriverList();
 //        return arrayLon.get(i);
@@ -170,8 +154,6 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Driver d = postSnapshot.getValue(Driver.class);
-
-                    System.out.println("data snapshot Drivers name is -------------------> " + d.getName());
 
                     arrayLat.add(Double.toString(d.getLat()));
                     arrayLon.add(Double.toString(d.getLon()));
