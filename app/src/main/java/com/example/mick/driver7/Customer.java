@@ -1,0 +1,36 @@
+package com.example.mick.driver7;
+
+/**
+ * Created by Mick on 29/03/2017.
+ */
+
+public class Customer {
+
+    private String name;
+    private String address;
+    private int id;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}

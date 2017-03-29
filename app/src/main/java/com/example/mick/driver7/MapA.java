@@ -80,9 +80,8 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
 
                 //call the method to get the coordinates, which takes the index and the new interface
                 //because this all needs to be done async
-                appState.getLat(i, new SnapShotListener(){
+                appState.getCo(new SnapShotListener(){
                     public void onListFilled(ArrayList<String> arrayLat,ArrayList<String> arrayLon){
-                        AdminActivity appState1 = new AdminActivity();
 //                        ArrayList<String> test = arrayLat;
 //                        ArrayList<String> test1 = arrayLon;
                         latString = arrayLat.get(finalI);

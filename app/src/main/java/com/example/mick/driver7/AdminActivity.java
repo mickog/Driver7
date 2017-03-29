@@ -25,8 +25,7 @@ import java.util.List;
 
 public class AdminActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     private TextView textViewPersons;
-//    Button b;
-    ListView listV;
+
     Driver[] items = new Driver[2];
 
     final List<Driver> driverList = new ArrayList<Driver>();
@@ -47,6 +46,7 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         Firebase.setAndroidContext(this);
 //        textViewPersons = (TextView) findViewById(R.id.adminViewPerson);
         optionList.add("VIEW DRIVERS");
+        optionList.add("DESIGNATE A DRIVER");
         optionList.add("LOG OUT");
         listView1 = (ListView) findViewById(R.id.lv);
         ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,optionList);
@@ -115,31 +115,33 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         Driver d = driverList.get(position);
 //        Toast.makeText(this,"Clicked Driver "+d.getName()+" Lat is "+d.getLat()+" Lon is"+d.getLon(), Toast.LENGTH_SHORT).show();
 
-//        Toast.makeText(this,"Array names admin"+arrayNames.get(1),Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(this,MapA.class);
-        intent.putStringArrayListExtra("arrayNames", arrayNames);
-        intent.putStringArrayListExtra("arrayLat", arrayLat);
-        intent.putStringArrayListExtra("arrayLon", arrayLon);
-        startActivity(intent);
+
+        if(position == 0) {
+            Intent intent = new Intent(this, MapA.class);
+            intent.putStringArrayListExtra("arrayNames", arrayNames);
+            intent.putStringArrayListExtra("arrayLat", arrayLat);
+            intent.putStringArrayListExtra("arrayLon", arrayLon);
+            startActivity(intent);
+        }
+        else if(position == 1) {
+            Intent intent = new Intent(this, DesignateDriver.class);
+            intent.putStringArrayListExtra("arrayNames", arrayNames);
+            startActivity(intent);
+//            Toast.makeText(this,"DESIGNATE A DRIVER ACTIVITY",Toast.LENGTH_SHORT).show();
+
+        }
+        else if(position == 2) {
+            Toast.makeText(this,"GOODBYE",Toast.LENGTH_SHORT).show();
+            System.exit(0);
+
+        }
 
     }
-    public interface SnapshotListener{
-        void onListFilled(ArrayList<String> arrayLat);
-        void onFailure();
-    }
-    public void getLat(int i, SnapShotListener listener) {
+
+    public void getCo(SnapShotListener listener) {
         fillDriverList(listener);
-//        return arrayLat.get(i);
-        //return"0.000";
 
     }
-
-    public String getLon(int i) {
-//        fillDriverList();
-//        return arrayLon.get(i);
-        return"0.000";
-    }
-
     public void fillDriverList(final SnapShotListener listener) {
 
         //Creating firebase object

@@ -56,14 +56,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (name.equals(arrayNames.get(i))) {
                 AdminActivity appState = new AdminActivity();
                 final int finalI = i;
-                appState.getLat(i, new SnapShotListener(){
+                appState.getCo(new SnapShotListener(){
                     public void onListFilled(ArrayList<String> arrayLat,ArrayList<String> arrayLon){
-                        AdminActivity appState1 = new AdminActivity();
-//                        ArrayList<String> test = arrayLat;
-
                         latString = arrayLat.get(finalI);
                         lonString = arrayLon.get(finalI);
-
 //                        Toast.makeText(getApplicationContext(), "lat ok string is " + latString+" lon is "+lonString, Toast.LENGTH_LONG).show();
                         double lat = Double.parseDouble(latString);
                         double lon = Double.parseDouble(lonString);
