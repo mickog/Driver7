@@ -1,20 +1,36 @@
 package com.example.mick.driver7;
 
+import android.*;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
+
+import static com.google.android.gms.wearable.DataMap.TAG;
 
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
 
     private GoogleApiClient mLocationClient;
     ProfileActivity activity;
@@ -29,14 +45,15 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     }
 
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO do something useful
         Toast.makeText(this, "onStartCommand", Toast.LENGTH_SHORT).show();
         mLocationClient = new GoogleApiClient.Builder(LocationService.this)
-                .addApi(LocationServices.API).addConnectionCallbacks(LocationService.this)
-                .addOnConnectionFailedListener(LocationService.this).build();
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(LocationService.this)
+                .addOnConnectionFailedListener(LocationService.this)
+                .build();
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
@@ -75,6 +92,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
         //if(servicesConnected()) {
         LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
+
+        startGeofence();
+
         //}
 
     }
@@ -93,4 +113,114 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         // TODO Auto-generated method stub
         return null;
     }
+
+/************************************************************************************************************/
+    /****************************NEW GEOFENCE METHODS****************************************///
+
+    // ******************Create a Intent send by the notification***************************************/
+    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+    // Create a Intent send by the notification
+    public static Intent makeNotificationIntent(Context context, String msg) {
+        Intent intent = new Intent( context, ProfileActivity.class );
+        intent.putExtra( NOTIFICATION_MSG, msg );
+        return intent;
+    }
+
+    // Start Geofence creation process
+    private void startGeofence() {
+        LatLng home = new LatLng(53.4013252,-6.4090319);
+        Geofence geofence = createGeofence(home , 10000 );
+        Log.i(TAG, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG is "+geofence.toString());
+
+        GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
+        Log.i(TAG, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH is "+geofenceRequest.toString());
+
+        addGeofence( geofenceRequest );
+        Log.i(TAG, "startGeofence()");
+
+    }
+
+
+    /****************************Create GEOFENCE METHODS****************************************///
+
+    // Create a Geofence Request
+    private GeofencingRequest createGeofenceRequest( Geofence geofence ) {
+        Log.d(TAG, "createGeofenceRequest");
+        return new GeofencingRequest.Builder()
+                .setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_ENTER )
+                .addGeofence( geofence )
+                .build();
+    }
+    /****************************Create GEOFENCE METHOD****************************************///
+    private static final String GEOFENCE_REQ_ID = "My Geofence";
+
+    private Geofence createGeofence( LatLng latLng, float radius ) {
+        Log.d(TAG, "createGeofence---------------------->");
+        return new Geofence.Builder()
+                .setRequestId(GEOFENCE_REQ_ID)
+                .setCircularRegion( latLng.latitude, latLng.longitude, radius)
+                .setExpirationDuration( 1000000 )
+                .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
+                        | Geofence.GEOFENCE_TRANSITION_EXIT )
+                .build();
+    }
+
+    // *********************Add the created GeofenceRequest to the device's monitoring list**********/
+    private void addGeofence(GeofencingRequest request) {
+        if (checkPermission())
+            Log.d(TAG, "addGeofenceAAAAAAAAAAAAAAAAAaBBBBBBBBBBBBBBBBBB" +checkPermission());
+
+        LocationServices.GeofencingApi.addGeofences(
+                    mLocationClient,
+                    request,
+                    createGeofencePendingIntent()
+            ).setResultCallback(this);
+    }
+/*****************************check permissions***************************************************/
+    private boolean checkPermission() {
+        boolean perm = (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED );
+        Log.d(TAG, "checkPermission() isSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs "+perm);
+        // Ask for permission if it wasn't granted yet
+        return (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED );
+    }
+    /*****************************create the pending intent***************************************************/
+
+    private PendingIntent geoFencePendingIntent;
+    private final int GEOFENCE_REQ_CODE = 0;
+    private PendingIntent createGeofencePendingIntent() {
+        Log.d(TAG, "createGeofencePendingIntent");
+        if ( geoFencePendingIntent != null ) {
+            Log.d(TAG, "createGeofencePendingIntent is not null it is "+geoFencePendingIntent.toString());
+
+            return geoFencePendingIntent;
+        }
+
+        Intent intent = new Intent( this, GeofenceTransitionService.class);
+        Log.d(TAG, "returning intent "+intent.toString());
+
+        return PendingIntent.getService(
+                this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+    }
+    /*****************************create the on result message***************************************************/
+
+    @Override
+    public void onResult(@NonNull Status status) {
+        Log.i(TAG, "onResult: " + status);
+        if ( status.isSuccess() ) {
+            Log.d(TAG, "something was succesfull ");
+
+//            saveGeofence();
+//            drawGeofence();
+        } else {
+            // inform about fail
+        }
+    }
+
+
+
+
+
+
 }

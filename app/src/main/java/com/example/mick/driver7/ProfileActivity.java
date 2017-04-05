@@ -4,8 +4,11 @@ package com.example.mick.driver7;
  * Created by Mick on 13/02/2017.
  */
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +21,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -71,6 +76,31 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
         });
+
+
+        //Creating firebase object
+        Firebase ref = new Firebase(Config.FIREBASE_URL);
+
+        String[]names;
+        //adding a value event listener so if data in database changes it does in textview also not needed at the minute
+        ref.child("Driver").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    Driver d = postSnapshot.getValue(Driver.class);
+
+                }
+
+            }
+
+            /************had to implement this method****************/
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+
+            }
+        });
             }
 /***********************************Method for updating Firebase with the users new co-ordinates******************/
 
@@ -90,25 +120,6 @@ public class ProfileActivity extends AppCompatActivity {
 //        ref.child("Driver2").push().setValue(d);
         ref.child("Driver").child("Driver2").setValue(d);
 
-       // adding a value event listener so if data in database changes it does in textview also not needed at the minute
-//        ref.child("Driver2").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-//                    Driver d = postSnapshot.getValue(Driver.class);
-//                    String details = "Name : " + d.getName() + "\nLatitude : " + d.getLat() + "\nLongitude : " + d.getLon();
-//                    Toast.makeText(getApplicationContext(),"drivers details : "+d.getName()+" "+d.getLat(),Toast.LENGTH_LONG).show();
-//                    textViewPersons.setText(details);
-//                }
-//            }
-//
-//            /************had to implement this method****************/
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//                System.out.println("The read failed: " + firebaseError.getMessage());
-//
-//            }
-//        });
 
     }
 /********************* Method to receive the co-ordinates and pass to the update firebase********************/
@@ -118,5 +129,10 @@ public class ProfileActivity extends AppCompatActivity {
         updatetFirebase("MICK",x,y);
 
     }
+    /********************* NEW GEOFENCE CODE****************************************************************/
+
+
+
 }
+
 

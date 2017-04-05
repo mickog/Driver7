@@ -60,6 +60,10 @@
             android:name=".LocationService"
             android:theme="@style/Theme.AppCompat" />
 
+        <service android:name=".GeofenceTransitionService"
+            android:theme="@style/Theme.AppCompat" />
+
+
     </application>
 
 </manifest>

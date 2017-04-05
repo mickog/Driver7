@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -22,6 +23,7 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
     ListView listView;
     ArrayList<String> addressList = new ArrayList<String>();
     ArrayList<String> arrayNames;
+    ArrayAdapter adapter;
 
 
     @Override
@@ -68,7 +70,7 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
 
 
                 }
-                ArrayAdapter adapter = new ArrayAdapter(DesignateDriver.this,android.R.layout.simple_list_item_1,addressList);
+                adapter = new ArrayAdapter(DesignateDriver.this,android.R.layout.simple_list_item_1,addressList);
 
                 listView.setAdapter(adapter);
 
@@ -86,12 +88,19 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        chooseDriver(custList.get(position));
+        if(listView.getAdapter()==adapter)
+        {
+            chooseDriver(custList.get(position));
+        }
+        else {
+
+            Toast.makeText(this,"Driver is "+arrayNames.get(position)+" and customer address is "+addressList.get(position),Toast.LENGTH_SHORT ).show();
+        }
     }
 
     private void chooseDriver(Customer customer) {
-        ArrayAdapter adapter1 = new ArrayAdapter(DesignateDriver.this,android.R.layout.simple_list_item_1,arrayNames);
 
+        ArrayAdapter adapter1 = new ArrayAdapter(DesignateDriver.this,android.R.layout.simple_list_item_1,arrayNames);
         listView.setAdapter(adapter1);
     }
 
