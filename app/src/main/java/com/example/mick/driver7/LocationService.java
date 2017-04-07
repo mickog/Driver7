@@ -37,18 +37,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     private Location mCurrentLocation;
     LocationRequest mLocationRequest;
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Toast.makeText(getApplicationContext(),"SERVICE STOPPED",Toast.LENGTH_LONG).show();
-        mLocationClient.disconnect();
-
-    }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        // TODO do something useful
-        Toast.makeText(this, "onStartCommand", Toast.LENGTH_SHORT).show();
+    public void onCreate() {
+        super.onCreate();
         mLocationClient = new GoogleApiClient.Builder(LocationService.this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(LocationService.this)
@@ -63,9 +55,42 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         mLocationClient.connect();
 
         // getting the static instance of activity
-         activity = ProfileActivity.instance;
+        activity = ProfileActivity.instance;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Toast.makeText(getApplicationContext(),"SERVICE STOPPED",Toast.LENGTH_LONG).show();
+        mLocationClient.disconnect();
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        boolean flag=false;
+        flag =intent.getBooleanExtra("flag",false);
+//        String s = intent.getStringExtra("KEY1");
+
+        try {
+            if (flag==true) {
+                double geoLat = intent.getDoubleExtra("geoLat", 0.0);
+                double geoLon = intent.getDoubleExtra("geoLon", 0.0);
+                Toast.makeText(this, "Lat and Lon are " + geoLat + " " + geoLon, Toast.LENGTH_LONG).show();
+                startGeofence(geoLat,geoLon);
+
+
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(this, "Exception in service is  "+e, Toast.LENGTH_SHORT).show();
+
+        }
 
         return Service.START_NOT_STICKY;
+
     }
 
     @Override
@@ -93,7 +118,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         //if(servicesConnected()) {
         LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
 
-        startGeofence();
 
         //}
 
@@ -127,9 +151,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     }
 
     // Start Geofence creation process
-    private void startGeofence() {
-        LatLng home = new LatLng(53.4013252,-6.4090319);
-        Geofence geofence = createGeofence(home , 10000 );
+    private void startGeofence(double lat, double lon) {
+        LatLng home = new LatLng(lat,lon);
+        Geofence geofence = createGeofence(home , 1000 );
         Log.i(TAG, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG is "+geofence.toString());
 
         GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );

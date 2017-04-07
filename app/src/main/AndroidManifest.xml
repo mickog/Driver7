@@ -15,18 +15,22 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVyujWsd90ek7p2olB_BYbSUcExeRxF64" />
-
         <activity
-            android:name=".MainActivity"
+            android:name=".AdminActivity"
             android:label="LOCATE DRIVERS"
-            android:theme="@style/Theme.AppCompat">
-            >
+            android:theme="@style/Theme.AppCompat" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="LOCATE DRIVERS"
+            android:theme="@style/Theme.AppCompat"/>
+
         <activity
             android:name=".RegistrationActivity"
             android:label="LOCATE DRIVERS"
@@ -35,10 +39,10 @@
             android:name=".LoginActivity"
             android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat" />
-        <activity
-            android:name=".AdminActivity"
-            android:label="LOCATE DRIVERS"
-            android:theme="@style/Theme.AppCompat" />
+        <!--<activity-->
+            <!--android:name=".AdminActivity"-->
+            <!--android:label="LOCATE DRIVERS"-->
+            <!--android:theme="@style/Theme.AppCompat" />-->
         <activity
             android:name=".MapActivity"
             android:label="LOCATE DRIVERS"

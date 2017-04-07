@@ -24,6 +24,8 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
     ArrayList<String> addressList = new ArrayList<String>();
     ArrayList<String> arrayNames;
     ArrayAdapter adapter;
+    //Creating firebase object
+    Firebase ref = new Firebase(Config.FIREBASE_URL);
 
 
     @Override
@@ -44,8 +46,7 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
 
     private void fillCustomerList() {
 
-        //Creating firebase object
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
+
 
         //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
@@ -85,16 +86,37 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
         });
     }
 
+    String chosenAddress;
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         if(listView.getAdapter()==adapter)
         {
+            chosenAddress = addressList.get(position);
             chooseDriver(custList.get(position));
         }
         else {
 
-            Toast.makeText(this,"Driver is "+arrayNames.get(position)+" and customer address is "+addressList.get(position),Toast.LENGTH_SHORT ).show();
+            Toast.makeText(this,"Driver is "+arrayNames.get(position)+" and customer address is "+chosenAddress,Toast.LENGTH_SHORT ).show();
+            ref.child("Driver").child("Bob").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        Driver d = postSnapshot.getValue(Driver.class);
+                        Toast.makeText(DesignateDriver.this,"Driver is "+d.getName()+" job is "+d.getJob(),Toast.LENGTH_LONG ).show();
+
+                    }
+
+                }
+
+                /************had to implement this method****************/
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    System.out.println("The read failed: " + firebaseError.getMessage());
+
+                }
+            });
         }
     }
 
@@ -102,6 +124,7 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
 
         ArrayAdapter adapter1 = new ArrayAdapter(DesignateDriver.this,android.R.layout.simple_list_item_1,arrayNames);
         listView.setAdapter(adapter1);
+
     }
 
 
