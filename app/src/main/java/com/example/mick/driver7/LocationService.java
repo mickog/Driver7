@@ -153,7 +153,9 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     // Start Geofence creation process
     private void startGeofence(double lat, double lon) {
         LatLng home = new LatLng(lat,lon);
-        Geofence geofence = createGeofence(home , 1000 );
+        Geofence geofence = createGeofence(home , 100 );
+        Toast.makeText(getBaseContext(), "sending geofences from service activity  ", Toast.LENGTH_SHORT).show();
+
         Log.i(TAG, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG is "+geofence.toString());
 
         GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );

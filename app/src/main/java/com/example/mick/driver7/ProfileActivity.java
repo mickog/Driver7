@@ -23,6 +23,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,13 +35,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     static ProfileActivity instance;
     private TextView tvEmail;
-    private EditText editTextName;
-    private EditText editLon;
-    private EditText editLat;
-    private TextView textViewPersons;
-    private Button buttonSave;
+        private Button buttonSave;
     Button buttonStop;
+    Button logout;
     private String userId;
+    String username;
+    FirebaseAuth firebaseAuth;
 
 
     /***************************On Create Method for when class is creates************************/
@@ -55,11 +56,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         //declare and initialise components
         tvEmail = (TextView) findViewById(R.id.tvEmailProfile);
-//        userId = getIntent().getExtras().getString("UserID");
-//        tvEmail.setText(getIntent().getExtras().getString("Email") + "\nUser ID is =  " + userId);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        username = user.getDisplayName();
         buttonSave = (Button) findViewById(R.id.start);
         buttonStop = (Button) findViewById(R.id.stop);
-        textViewPersons = (TextView) findViewById(R.id.textViewPersons);
+        logout = (Button) findViewById(R.id.logout);
 
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);
@@ -83,24 +85,27 @@ public class ProfileActivity extends AppCompatActivity {
 
         });
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.getInstance().signOut();
+                System.exit(0);
 
+            }
+
+        });
     }
 /***********************************Method for updating Firebase with the users new co-ordinates******************/
-
-    public void actuallyUpdateFirebase(String name,Double lat, Double lon)
-    {
-
-    }
 
 String job="none";
     boolean flag = false;
 
-    public void updatetFirebase(String name,Double lat, Double lon) {
+    public void updatetFirebase(Double lat, Double lon) {
         //Creating firebase object
         Firebase ref = new Firebase(Config.FIREBASE_URL);
 
         //adding a value event listener so if data in database changes it does in textview also not needed at the minute
-        ref.child("Driver").child("Driver2").child("job").addValueEventListener(new ValueEventListener() {
+        ref.child("Driver").child(username).child("job").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 job=snapshot.getValue().toString();
@@ -123,9 +128,9 @@ String job="none";
         });
         if(!job.equals("none")&& flag==false)
                 {
-                    Toast.makeText(ProfileActivity.this, "job doesnt equal none ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "JOB IS "+job, Toast.LENGTH_SHORT).show();
                     flag=true;
-                    createGeofence("57 huntstown drive dublin");
+                    createGeofence(job);
 
                 }
 
@@ -133,13 +138,13 @@ String job="none";
         Driver d = new Driver();
 
         //Adding values
-        d.setName(name);
+        d.setName(username);
         d.setLat(lat);
         d.setLon(lon);
         d.setJob(job);
         //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
-//        ref.child("Driver").child("Driver2").setValue(d);
+        ref.child("Driver").child(username).setValue(d);
 
 
     }
@@ -156,19 +161,21 @@ String job="none";
             if (addresses.size() > 0) {
                 latitude = addresses.get(0).getLatitude();
                 longitude = addresses.get(0).getLongitude();
-                Toast.makeText(ProfileActivity.this, "in here lat and lon are "+latitude+" "+longitude, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "JOB = "+job+"\ncoord =  "+latitude+" "+longitude, Toast.LENGTH_LONG).show();
 
             } else {
-                Toast.makeText(ProfileActivity.this, "list is  empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "list is  empty", Toast.LENGTH_LONG).show();
 
             }
         }
         catch(Exception e)
         {
-            Toast.makeText(ProfileActivity.this, "Exception geocoding is  "+e, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, "Exception geocoding is  "+e, Toast.LENGTH_LONG).show();
 
         }
         try {
+            Toast.makeText(ProfileActivity.this, "sending geofences from profile activity  ", Toast.LENGTH_LONG).show();
+
             startService(new Intent(getBaseContext(), LocationService.class));
             Intent i = new Intent(getBaseContext(), LocationService.class);
 // potentially add data to the intent
@@ -178,7 +185,7 @@ String job="none";
             startService(i);
         }catch(Exception e)
             {
-                Toast.makeText(ProfileActivity.this, "Exception from passing stuff is  "+e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "Exception from passing stuff is  "+e, Toast.LENGTH_LONG).show();
 
             }
     }
@@ -187,7 +194,7 @@ String job="none";
     public void receiveCo(Double x, Double y)
     {
 //        Toast.makeText(this, "RECEIVING "+x+" AND "+y, Toast.LENGTH_SHORT).show();
-        updatetFirebase("MICK",x,y);;
+        updatetFirebase(x,y);
 
     }
     /********************* NEW GEOFENCE CODE****************************************************************/

@@ -67,7 +67,7 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
                     System.out.println("Customer Details -------------------> "+c.getName()+" "+c.getAddress()+" "+c.getId());
                     custList.add(c);
 
-                    addressList.add(c.getName()+"\n"+c.getAddress());
+                    addressList.add(c.getAddress());
 
 
                 }
@@ -98,25 +98,41 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
         else {
 
             Toast.makeText(this,"Driver is "+arrayNames.get(position)+" and customer address is "+chosenAddress,Toast.LENGTH_SHORT ).show();
-            ref.child("Driver").child("Bob").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
 
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        Driver d = postSnapshot.getValue(Driver.class);
-                        Toast.makeText(DesignateDriver.this,"Driver is "+d.getName()+" job is "+d.getJob(),Toast.LENGTH_LONG ).show();
+            //Creating driver object
+            Driver d = new Driver();
 
-                    }
-
-                }
-
-                /************had to implement this method****************/
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
-
-                }
-            });
+            //updating this driver with a new job, and giving him coordinates for base/shop
+            d.setName(arrayNames.get(position));
+            d.setLat(53.4012618);
+            d.setLon(-6.409061299999962);
+            d.setJob(chosenAddress);
+            //Storing values to firebase under the reference Driver
+//        ref.child("Driver2").push().setValue(d);
+            ref.child("Driver").child(arrayNames.get(position)).setValue(d);
+//            ref.child("Driver").child("Bob").addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot snapshot) {
+//
+//                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+//                        Driver d = postSnapshot.getValue(Driver.class);
+//                        if(d.getName().equals("Bob"))
+//                        {
+//                            Toast.makeText(DesignateDriver.this,"Driver desg is "+d.getName(),Toast.LENGTH_SHORT ).show();
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//                /************had to implement this method****************/
+//                @Override
+//                public void onCancelled(FirebaseError firebaseError) {
+//                    System.out.println("The read failed: " + firebaseError.getMessage());
+//
+//                }
+//            });
         }
     }
 

@@ -89,11 +89,16 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
                     System.out.println("data snapshot Drivers name is -------------------> "+d.getName());
                     driverList.add(d);
                     arrayNames.add(d.getName());
+                    try{
                     arrayLat.add(Double.toString(d.getLat()));
                     arrayLon.add(Double.toString(d.getLon()));
 //                    ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,driverList);
 //                    listView1.setAdapter(adapter);
 
+                }catch(Exception e)
+                    {
+                        System.out.println("no coordinates to add");
+                    }
                 }
 
             }

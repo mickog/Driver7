@@ -19,13 +19,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     //create fields for email and password to register
+    private EditText txtUsername;
     private EditText txtEmailAddress;
     private EditText txtPassword;
     private FirebaseAuth firebaseAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -33,28 +37,66 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
+        txtUsername = (EditText)findViewById((R.id.username)) ;
         txtEmailAddress = (EditText) findViewById(R.id.txtEmailRegistration);
         txtPassword = (EditText) findViewById(R.id.txtPasswordRegistration);
         firebaseAuth = FirebaseAuth.getInstance();
     }
     public void btnRegistrationUser_Click(View v) {
-
+        final String email = txtEmailAddress.getText().toString();
+        final String password = txtPassword.getText().toString();
+        final String username = txtUsername.getText().toString();
         final ProgressDialog progressDialog = ProgressDialog.show(RegistrationActivity.this, "Please wait...", "Processing...", true);
-        (firebaseAuth.createUserWithEmailAndPassword(txtEmailAddress.getText().toString(), txtPassword.getText().toString()))
+        (firebaseAuth.createUserWithEmailAndPassword(email,password ))
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(RegistrationActivity.this, "Registration successful", Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(RegistrationActivity.this, LoginActivity.class);
-                            startActivity(i);
+                            //Sign in the user here
+                            signin(email,password,username);
+
                         }
                         else
                         {
                             Log.e("ERROR", task.getException().toString());
                             Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private void signin(String email, String password, final String username) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            //New Account is signed in and now the Current User
+                            FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
+                            Toast.makeText(RegistrationActivity.this, "curr user is "+user.getEmail(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegistrationActivity.this, "passed in username is "+username, Toast.LENGTH_LONG).show();
+                            firebaseAuth.getInstance().signOut();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(username)
+                                    .build();
+
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()) {
+                                                Toast.makeText(RegistrationActivity.this, " updated display name ", Toast.LENGTH_LONG).show();
+
+                                            }
+                                        }
+                                    });
+//                            Toast.makeText(RegistrationActivity.this, "Registration successful", Toast.LENGTH_LONG).show();
+
+                            Intent i = new Intent(RegistrationActivity.this, LoginActivity.class);
+                            startActivity(i);
                         }
                     }
                 });

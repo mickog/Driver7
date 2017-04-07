@@ -16,7 +16,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVyujWsd90ek7p2olB_BYbSUcExeRxF64" />
         <activity
-            android:name=".AdminActivity"
+            android:name=".MainActivity"
             android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat" >
 
@@ -26,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+        <!--<activity-->
             android:name=".MainActivity"
             android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat"/>
@@ -39,10 +39,10 @@
             android:name=".LoginActivity"
             android:label="LOCATE DRIVERS"
             android:theme="@style/Theme.AppCompat" />
-        <!--<activity-->
-            <!--android:name=".AdminActivity"-->
-            <!--android:label="LOCATE DRIVERS"-->
-            <!--android:theme="@style/Theme.AppCompat" />-->
+        <activity
+            android:name=".AdminActivity"
+            android:label="LOCATE DRIVERS"
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".MapActivity"
             android:label="LOCATE DRIVERS"
