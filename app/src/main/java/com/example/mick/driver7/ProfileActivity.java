@@ -187,7 +187,7 @@ String job="none";
     public void receiveCo(Double x, Double y)
     {
 //        Toast.makeText(this, "RECEIVING "+x+" AND "+y, Toast.LENGTH_SHORT).show();
-        updatetFirebase("MICK",x,y);
+        updatetFirebase("MICK",x,y);;
 
     }
     /********************* NEW GEOFENCE CODE****************************************************************/
