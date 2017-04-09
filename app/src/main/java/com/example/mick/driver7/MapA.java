@@ -38,7 +38,7 @@ public class MapA extends AppCompatActivity implements OnMapReadyCallback {
         arrayNames = I.getStringArrayListExtra("arrayNames");
         arrayLat = I.getStringArrayListExtra("arrayLat");
         arrayLon = I.getStringArrayListExtra("arrayLon");
-        name = arrayNames.get(1);
+        name = arrayNames.get(0);
         return arrayNames;
     }
 

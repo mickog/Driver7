@@ -110,6 +110,7 @@ String jobTemp="none";
 
         ref.child("Driver").child(username).child("lat").setValue(lat);
         ref.child("Driver").child(username).child("lon").setValue(lon);
+        ref.child("Driver").child(username).child("job").setValue(job);
         ref.child("Driver").child(username).child("jobStatus").setValue(jobStatus);
 //
 //

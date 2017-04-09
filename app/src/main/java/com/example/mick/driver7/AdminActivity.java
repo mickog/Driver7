@@ -53,26 +53,9 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(this);
         fillDriverList();
-//                Toast.makeText(getApplicationContext(),"in here",Toast.LENGTH_LONG).show();
-
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
-        ref.child("Driver").child("Mick").child("jobStatus").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-//                Toast.makeText(AdminActivity.this, "Job status changed ", Toast.LENGTH_LONG).show();
-            }
-
-            /************had to implement this method****************/
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-
-            }
 
 
-        });
     }
-
 
     public void fillDriverList() {
 
@@ -85,7 +68,7 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
         String[]names;
-        final String jobStatusWayBack="ON WAY BACK";
+//        final String jobStatusWayBack="ON WAY BACK";
         //adding a value event listener so if data in database changes it does in textview also not needed at the minute
         ref.child("Driver").addValueEventListener(new ValueEventListener() {
             @Override
@@ -104,21 +87,24 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
                     arrayNames.add(d.getName());
                     if(d.getJobStatus().equals("Arrived at Job"))
                     {
-                       Toast.makeText(AdminActivity.this,d.getName()+" has just reached "+d.getJob(),Toast.LENGTH_LONG).show();
+                        ref.child("Driver").child(d.getName()).child("jobStatus").setValue("Completing transaction");
+                       Toast.makeText(AdminActivity.this,d.getName()+" has JUST just reached "+d.getJob()+" after"+(d.getJobFinished()-d.getJobStarted())/1000*60+" minutes",Toast.LENGTH_LONG).show();
 //                        d.setJobStatus(jobStatusWayBack);
                     }
                     if(d.getJobStatus().equals("On The Way Back"))
                     {
-                        Toast.makeText(AdminActivity.this,d.getName()+" is on the way back ",Toast.LENGTH_LONG).show();
+                        ref.child("Driver").child(d.getName()).child("jobStatus").setValue("ComingHome");
+
+                        Toast.makeText(AdminActivity.this,d.getName()+" is on the way back it took"+(d.getJobFinished()-d.getJobStarted())/1000/60+" minutes",Toast.LENGTH_LONG).show();
 //                        d.setJobStatus(jobStatusWayBack);
                     }
                     try{
-                    arrayLat.add(Double.toString(d.getLat()));
-                    arrayLon.add(Double.toString(d.getLon()));
+                        arrayLat.add(Double.toString(d.getLat()));
+                        arrayLon.add(Double.toString(d.getLon()));
 //                    ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,driverList);
 //                    listView1.setAdapter(adapter);
 
-                }catch(Exception e)
+                    }catch(Exception e)
                     {
                         System.out.println("no coordinates to add");
                     }

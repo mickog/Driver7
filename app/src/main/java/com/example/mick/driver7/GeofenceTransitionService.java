@@ -82,12 +82,24 @@ public class GeofenceTransitionService extends IntentService {
         String status = null;
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
             status = "Entering ";
-            //update firebase table based on the driver reaching or leaving the destination
             ref.child("Driver").child(username).child("jobStatus").setValue("Arrived at Job");
+
+            //update firebase table based on the driver reaching or leaving the destination
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+
+            ref.child("Driver").child(username).child("jobFinished").setValue(ts);
+
+
         }
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
             status = "Exiting ";
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+
+            ref.child("Driver").child(username).child("jobFinished").setValue(ts);
             ref.child("Driver").child(username).child("jobStatus").setValue("On The Way Back");
+
 
         }
         return status + TextUtils.join( ", ", triggeringGeofencesList);
