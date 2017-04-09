@@ -101,26 +101,33 @@ String jobTemp="none";
     String job="none";
     String jobStatus="";
     boolean flag = false;
+    //Creating driver object
+//    Driver d = new Driver();
 
     public void updatetFirebase(Double lat, Double lon) {
         //Creating firebase object
         final Firebase ref = new Firebase(Config.FIREBASE_URL);
 
-        //Creating driver object
-        Driver d = new Driver();
-
-        //Adding values
-        d.setName(username);
-        d.setLat(lat);
-        d.setLon(lon);
-        d.setJob(job);
-        d.setJobStatus(jobStatus);
+        ref.child("Driver").child(username).child("lat").setValue(lat);
+        ref.child("Driver").child(username).child("lon").setValue(lon);
+        ref.child("Driver").child(username).child("jobStatus").setValue(jobStatus);
+//
+//
+//        //Adding values
+//        d.setName(username);
+//        d.setLat(lat);
+//        d.setLon(lon);
+//        d.setJob(job);
+//        d.setJobStatus(jobStatus);
+//        if(d.getJobStarted()==null) {
+//            d.setJobStarted(0L);
+//            d.setJobFinished(0L);
+//        }
         //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
-        ref.child("Driver").child(username).setValue(d);
+//        ref.child("Driver").child(username).setValue(d);
 
 
-        //adding a value event listener so if data in database changes it does in textview also not needed at the minute
         ref.child("Driver").child(username).child("job").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -134,7 +141,6 @@ String jobTemp="none";
 
             }
         });
-//adding a value event listener so if data in database changes it does in textview also not needed at the minute
         ref.child("Driver").child(username).child("jobStatus").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -167,6 +173,10 @@ String jobTemp="none";
                             .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,int id) {
                                     ref.child("Driver").child(username).child("jobStatus").setValue("En Route");
+                                    Long tsLong = System.currentTimeMillis()/1000;
+                                    String ts = tsLong.toString();
+
+                                    ref.child("Driver").child(username).child("jobStarted").setValue(ts);
 
                                     createGeofence(job);
                                 }

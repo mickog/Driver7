@@ -98,20 +98,25 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
         else {
 
             Toast.makeText(this,"Driver is "+arrayNames.get(position)+" and customer address is "+chosenAddress,Toast.LENGTH_SHORT ).show();
-
-            //Creating driver object
-            Driver d = new Driver();
-
-            //updating this driver with a new job, and giving him coordinates for base/shop
-            d.setName(arrayNames.get(position));
-            d.setLat(53.4012618);
-            d.setLon(-6.409061299999962);
-            d.setJob(chosenAddress);
-            d.setJobStatus("");
+//
+//            //Creating driver object
+//            Driver d = new Driver();
+//
+//            //updating this driver with a new job, and giving him coordinates for base/shop
+//            d.setName(arrayNames.get(position));
+//            d.setLat(53.4012618);
+//            d.setLon(-6.409061299999962);
+//            d.setJob(chosenAddress);
+////            d.setJobStarted(0L);
+////            d.setJobFinished(0L);
+//            d.setJobStatus("");
             //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
-            ref.child("Driver").child(arrayNames.get(position)).setValue(d);
-//            ref.child("Driver").child("Bob").addValueEventListener(new ValueEventListener() {
+            ref.child("Driver").child(arrayNames.get(position)).child("job").setValue(chosenAddress);
+
+
+//            ref.child("Driver").child(arrayNames.get(position)).updateChildren();
+//            ref.child("Driver").child(arrayNames.get(position)).addValueEventListener(new ValueEventListener() {
 //                @Override
 //                public void onDataChange(DataSnapshot snapshot) {
 //

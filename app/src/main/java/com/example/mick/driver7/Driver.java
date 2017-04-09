@@ -9,6 +9,8 @@ public class Driver {
     private Double lat,lon;
     String job;
     String jobStatus;
+    Long jobStarted;
+    Long jobFinished;
 //    int id;
 
     public Driver(String name, Double lon, Double lat) {
@@ -59,6 +61,22 @@ public class Driver {
 
     public void setJobStatus(String jobStatus) {
         this.jobStatus = jobStatus;
+    }
+
+    public Long getJobStarted() {
+        return jobStarted;
+    }
+
+    public void setJobStarted(Long jobStarted) {
+        this.jobStarted = jobStarted;
+    }
+
+    public Long getJobFinished() {
+        return jobFinished;
+    }
+
+    public void setJobFinished(Long jobFinished) {
+        this.jobFinished = jobFinished;
     }
 
     @Override
