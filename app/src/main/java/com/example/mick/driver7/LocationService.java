@@ -147,14 +147,17 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public static Intent makeNotificationIntent(Context context, String msg) {
         Intent intent = new Intent( context, ProfileActivity.class );
         intent.putExtra( NOTIFICATION_MSG, msg );
+
         return intent;
     }
+
+
 
     // Start Geofence creation process
     private void startGeofence(double lat, double lon) {
         LatLng home = new LatLng(lat,lon);
         Geofence geofence = createGeofence(home , 100 );
-        Toast.makeText(getBaseContext(), "sending geofences from service activity  ", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getBaseContext(), "sending geofences from service activity  ", Toast.LENGTH_SHORT).show();
 
         Log.i(TAG, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG is "+geofence.toString());
 
@@ -178,7 +181,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
                 .build();
     }
     /****************************Create GEOFENCE METHOD****************************************///
-    private static final String GEOFENCE_REQ_ID = "My Geofence";
+    private static final String GEOFENCE_REQ_ID = "Delivery Destination";
 
     private Geofence createGeofence( LatLng latLng, float radius ) {
         Log.d(TAG, "createGeofence---------------------->");

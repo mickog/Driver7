@@ -107,6 +107,7 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
             d.setLat(53.4012618);
             d.setLon(-6.409061299999962);
             d.setJob(chosenAddress);
+            d.setJobStatus("");
             //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
             ref.child("Driver").child(arrayNames.get(position)).setValue(d);

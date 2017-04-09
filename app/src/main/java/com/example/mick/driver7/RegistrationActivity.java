@@ -43,9 +43,9 @@ public class RegistrationActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
     }
     public void btnRegistrationUser_Click(View v) {
-        final String email = txtEmailAddress.getText().toString();
-        final String password = txtPassword.getText().toString();
-        final String username = txtUsername.getText().toString();
+        final String email = txtEmailAddress.getText().toString().trim();
+        final String password = txtPassword.getText().toString().trim();
+        final String username = txtUsername.getText().toString().trim();
         final ProgressDialog progressDialog = ProgressDialog.show(RegistrationActivity.this, "Please wait...", "Processing...", true);
         (firebaseAuth.createUserWithEmailAndPassword(email,password ))
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

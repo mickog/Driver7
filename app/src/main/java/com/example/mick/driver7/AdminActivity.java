@@ -49,23 +49,35 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         optionList.add("DESIGNATE A DRIVER");
         optionList.add("LOG OUT");
         listView1 = (ListView) findViewById(R.id.lv);
-        ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,optionList);
+        ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this, android.R.layout.simple_list_item_1, optionList);
         listView1.setAdapter(adapter);
         listView1.setOnItemClickListener(this);
-
-//        b = (Button)findViewById(R.id.adminButton);
-
-
-                fillDriverList();
+        fillDriverList();
 //                Toast.makeText(getApplicationContext(),"in here",Toast.LENGTH_LONG).show();
 
+        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        ref.child("Driver").child("Mick").child("jobStatus").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+//                Toast.makeText(AdminActivity.this, "Job status changed ", Toast.LENGTH_LONG).show();
+            }
 
+            /************had to implement this method****************/
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+
+            }
+
+
+        });
     }
+
 
     public void fillDriverList() {
 
         //Creating firebase object
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
+        final Firebase ref = new Firebase(Config.FIREBASE_URL);
 
         //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
@@ -73,22 +85,33 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
         String[]names;
+        final String jobStatusWayBack="ON WAY BACK";
         //adding a value event listener so if data in database changes it does in textview also not needed at the minute
         ref.child("Driver").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+//               Toast.makeText(AdminActivity.this,"job status is "+ snapshot.child("jobStatus").getValue().toString(),Toast.LENGTH_LONG).show();
                 arrayNames = new ArrayList<String>();
                 arrayLat = new ArrayList<String>();
                 arrayLon = new ArrayList<String>();
 
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Driver d = postSnapshot.getValue(Driver.class);
-                    String details = "Name : " + d.getName() + "\nLatitude : " + d.getLat() + "\nLongitude : " + d.getLon();
 //                    Toast.makeText(AdminActivity.this,"data snapshot Drivers name is "+d.getName(),Toast.LENGTH_SHORT).show();
 //                    textViewPersons.setText(details);
                     System.out.println("data snapshot Drivers name is -------------------> "+d.getName());
                     driverList.add(d);
                     arrayNames.add(d.getName());
+                    if(d.getJobStatus().equals("Arrived at Job"))
+                    {
+                       Toast.makeText(AdminActivity.this,d.getName()+" has just reached "+d.getJob(),Toast.LENGTH_LONG).show();
+//                        d.setJobStatus(jobStatusWayBack);
+                    }
+                    if(d.getJobStatus().equals("On The Way Back"))
+                    {
+                        Toast.makeText(AdminActivity.this,d.getName()+" is on the way back ",Toast.LENGTH_LONG).show();
+//                        d.setJobStatus(jobStatusWayBack);
+                    }
                     try{
                     arrayLat.add(Double.toString(d.getLat()));
                     arrayLon.add(Double.toString(d.getLon()));
@@ -152,7 +175,6 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         //Creating firebase object
         Firebase ref = new Firebase(Config.FIREBASE_URL);
 
-        //adding a value event listener so if data in database changes it does in textview also not needed at the minute
         ref.child("Driver").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

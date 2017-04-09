@@ -97,42 +97,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 /***********************************Method for updating Firebase with the users new co-ordinates******************/
 
-String job="none";
+String jobTemp="none";
+    String job="none";
+    String jobStatus="";
     boolean flag = false;
 
     public void updatetFirebase(Double lat, Double lon) {
         //Creating firebase object
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
-
-        //adding a value event listener so if data in database changes it does in textview also not needed at the minute
-        ref.child("Driver").child(username).child("job").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                job=snapshot.getValue().toString();
-//                Toast.makeText(ProfileActivity.this, snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-//                String d = snapshot.getValue(String.class);
-//                if(!d.equals("none")&& flag==false)
-//                {
-//                    Toast.makeText(ProfileActivity.this, "job doesnt equal none ", Toast.LENGTH_SHORT).show();
-//                    flag=true;
-//
-//                }
-            }
-
-            /************had to implement this method****************/
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-
-            }
-        });
-        if(!job.equals("none")&& flag==false)
-                {
-                    Toast.makeText(ProfileActivity.this, "JOB IS "+job, Toast.LENGTH_SHORT).show();
-                    flag=true;
-                    createGeofence(job);
-
-                }
+        final Firebase ref = new Firebase(Config.FIREBASE_URL);
 
         //Creating driver object
         Driver d = new Driver();
@@ -142,10 +114,79 @@ String job="none";
         d.setLat(lat);
         d.setLon(lon);
         d.setJob(job);
+        d.setJobStatus(jobStatus);
         //Storing values to firebase under the reference Driver
 //        ref.child("Driver2").push().setValue(d);
         ref.child("Driver").child(username).setValue(d);
 
+
+        //adding a value event listener so if data in database changes it does in textview also not needed at the minute
+        ref.child("Driver").child(username).child("job").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                job=snapshot.getValue().toString();
+            }
+
+            /************had to implement this method****************/
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+
+            }
+        });
+//adding a value event listener so if data in database changes it does in textview also not needed at the minute
+        ref.child("Driver").child(username).child("jobStatus").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                jobStatus=snapshot.getValue().toString();
+            }
+
+            /************had to implement this method****************/
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+
+            }
+        });
+
+        //if job changes at any stage
+        if(!job.equals(jobTemp)&& !job.equals("none"))
+                {
+                    jobTemp=job;
+                    flag=true;
+//                    Toast.makeText(ProfileActivity.this, "JOB IS "+job, Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ProfileActivity.this);
+
+                    // set title
+                    alertDialogBuilder.setTitle("Accept Delivery to \n"+job);
+
+                    // set dialog message
+                    alertDialogBuilder
+                            .setMessage("Click yes to confirm!")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    ref.child("Driver").child(username).child("jobStatus").setValue("En Route");
+
+                                    createGeofence(job);
+                                }
+                            })
+                            .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    dialog.cancel();
+                                }
+                            });
+
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    // show it
+                    alertDialog.show();
+
+
+                }
 
     }
     /********************* Method to create the geofence based on given job*************************************/
@@ -161,7 +202,7 @@ String job="none";
             if (addresses.size() > 0) {
                 latitude = addresses.get(0).getLatitude();
                 longitude = addresses.get(0).getLongitude();
-                Toast.makeText(ProfileActivity.this, "JOB = "+job+"\ncoord =  "+latitude+" "+longitude, Toast.LENGTH_LONG).show();
+//                Toast.makeText(ProfileActivity.this, "JOB = "+job+"\ncoord =  "+latitude+" "+longitude, Toast.LENGTH_LONG).show();
 
             } else {
                 Toast.makeText(ProfileActivity.this, "list is  empty", Toast.LENGTH_LONG).show();
@@ -174,7 +215,7 @@ String job="none";
 
         }
         try {
-            Toast.makeText(ProfileActivity.this, "sending geofences from profile activity  ", Toast.LENGTH_LONG).show();
+//            Toast.makeText(ProfileActivity.this, "sending geofences from profile activity  ", Toast.LENGTH_LONG).show();
 
             startService(new Intent(getBaseContext(), LocationService.class));
             Intent i = new Intent(getBaseContext(), LocationService.class);

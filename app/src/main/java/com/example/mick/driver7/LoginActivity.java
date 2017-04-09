@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     public void btnUserLogin_Click(View v) {
         final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait...", "Proccessing...", true);
 
-        (firebaseAuth.signInWithEmailAndPassword(txtEmailLogin.getText().toString(), txtPwd.getText().toString()))
+        (firebaseAuth.signInWithEmailAndPassword(txtEmailLogin.getText().toString().trim(), txtPwd.getText().toString().trim()))
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

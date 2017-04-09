@@ -8,6 +8,7 @@ public class Driver {
     private String name;
     private Double lat,lon;
     String job;
+    String jobStatus;
 //    int id;
 
     public Driver(String name, Double lon, Double lat) {
@@ -52,13 +53,13 @@ public class Driver {
         this.job = job;
     }
 
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public String getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(String jobStatus) {
+        this.jobStatus = jobStatus;
+    }
 
     @Override
     public String toString() {

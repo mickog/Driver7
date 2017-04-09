@@ -12,9 +12,12 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -30,10 +33,17 @@ public class GeofenceTransitionService extends IntentService {
     public GeofenceTransitionService() {
         super(TAG);
     }
+    Firebase ref = new Firebase(Config.FIREBASE_URL);
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+    String username = user.getDisplayName();
+
+    //handle the intent
     @Override
     protected void onHandleIntent(Intent intent) {
-        System.out.println( "TEST1 ");
+
+        //just printing for debugging purposes
+        System.out.println( "TEST1 username is "+username);
 
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         // Handling errors
@@ -43,6 +53,7 @@ public class GeofenceTransitionService extends IntentService {
             return;
         }
 
+        //this int determines the type of geofence
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
@@ -50,7 +61,8 @@ public class GeofenceTransitionService extends IntentService {
             // Get the geofence that were triggered
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
 
-            String geofenceTransitionDetails = getGeofenceTrasitionDetails(geoFenceTransition, triggeringGeofences );
+            //this will call the method
+            String geofenceTransitionDetails = getDetailsToDisplay(geoFenceTransition, triggeringGeofences );
 
             // Send notification details as a String
             sendNotification( geofenceTransitionDetails );
@@ -58,7 +70,7 @@ public class GeofenceTransitionService extends IntentService {
     }
 
 
-    private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
+    private String getDetailsToDisplay(int geoFenceTransition, List<Geofence> triggeringGeofences) {
         System.out.println( "TEST2");
 
         // get the ID of each geofence triggered
@@ -68,16 +80,21 @@ public class GeofenceTransitionService extends IntentService {
         }
 
         String status = null;
-        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
+        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
             status = "Entering ";
-        else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
+            //update firebase table based on the driver reaching or leaving the destination
+            ref.child("Driver").child(username).child("jobStatus").setValue("Arrived at Job");
+        }
+        else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
             status = "Exiting ";
+            ref.child("Driver").child(username).child("jobStatus").setValue("On The Way Back");
+
+        }
         return status + TextUtils.join( ", ", triggeringGeofencesList);
     }
 
     private void sendNotification( String msg ) {
         System.out.println( "TEST3");
-
         Log.i(TAG, "sendNotification: " + msg );
 
         // Intent to start the Activity
@@ -109,7 +126,7 @@ public class GeofenceTransitionService extends IntentService {
                 .setSmallIcon(R.drawable.ic_action_location)
                 .setColor(Color.RED)
                 .setContentTitle(msg)
-                .setContentText("Geofence Notification!")
+                .setContentText("Time Notification")
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .setAutoCancel(true);
