@@ -26,5 +26,6 @@
         android:id="@+id/btnLogin"
         android:onClick="btnLogin_Click"
         android:layout_below="@+id/btnRegistration"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignStart="@+id/btnRegistration"
+        android:layout_alignEnd="@+id/btnRegistration" />
 </RelativeLayout>

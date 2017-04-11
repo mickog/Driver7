@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,16 +28,21 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_login);
 
         txtEmailLogin = (EditText) findViewById(R.id.txtEmailLogin);
         txtPwd = (EditText) findViewById(R.id.txtPasswordLogin);
         firebaseAuth = FirebaseAuth.getInstance();
+        Button button = (Button)findViewById(R.id.btnLogin);
     }
-
+    public void btnRegistration_Click(View v) {
+        Intent i = new Intent(com.example.mick.driver7.LoginActivity.this, RegistrationActivity.class);
+        startActivity(i);
+    }
     public void btnUserLogin_Click(View v) {
         final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait...", "Proccessing...", true);
 

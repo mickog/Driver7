@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Timer;
 
 
 public class GeofenceTransitionService extends IntentService {
@@ -41,7 +42,15 @@ public class GeofenceTransitionService extends IntentService {
     //handle the intent
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        try {
+            Thread.sleep(7000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Intent intent1 = new Intent("android.intent.category.LAUNCHER");
+        intent1.setClassName("com.example.mick.driver7", "com.example.mick.driver7.ProfileActivity");
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent1);
         //just printing for debugging purposes
         System.out.println( "TEST1 username is "+username);
 
@@ -99,7 +108,6 @@ public class GeofenceTransitionService extends IntentService {
 
             ref.child("Driver").child(username).child("jobFinished").setValue(ts);
             ref.child("Driver").child(username).child("jobStatus").setValue("On The Way Back");
-
 
         }
         return status + TextUtils.join( ", ", triggeringGeofencesList);

@@ -39,8 +39,9 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
     /**************************** On Create Method for when class is creates************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_admin);
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);

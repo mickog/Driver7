@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import static android.R.attr.name;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -180,6 +183,7 @@ String jobTemp="none";
                                     ref.child("Driver").child(username).child("jobStarted").setValue(ts);
 
                                     createGeofence(job);
+
                                 }
                             })
                             .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -225,6 +229,17 @@ String jobTemp="none";
             Toast.makeText(ProfileActivity.this, "Exception geocoding is  "+e, Toast.LENGTH_LONG).show();
 
         }
+
+
+        String label = "ABC Label";
+        String uriBegin = "geo:" + latitude + "," + longitude;
+        String query = latitude + "," + longitude + "(" + label + ")";
+        String encodedQuery = Uri.encode(query);
+        String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
+        Uri uri = Uri.parse(uriString);
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+
         try {
 //            Toast.makeText(ProfileActivity.this, "sending geofences from profile activity  ", Toast.LENGTH_LONG).show();
 
