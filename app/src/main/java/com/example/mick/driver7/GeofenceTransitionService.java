@@ -12,7 +12,10 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
@@ -79,6 +82,7 @@ public class GeofenceTransitionService extends IntentService {
     }
 
 
+    String jobAddress;
     private String getDetailsToDisplay(int geoFenceTransition, List<Geofence> triggeringGeofences) {
         System.out.println( "TEST2");
 
@@ -90,6 +94,23 @@ public class GeofenceTransitionService extends IntentService {
 
         String status = null;
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
+            ref.child("Driver").child(username).child("job").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snap) {
+                    jobAddress =  snap.getValue().toString();
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+
+            });
+            DataCollection dcc = new DataCollection();
+            dcc.setDriver(username);
+            dcc.setJob(jobAddress);
+            dcc.setTimeTook("10 minutes");
+            ref.child("dataCollection").push().setValue(dcc);
             status = "Entering ";
             ref.child("Driver").child(username).child("jobStatus").setValue("Arrived at Job");
 
@@ -108,6 +129,8 @@ public class GeofenceTransitionService extends IntentService {
 
             ref.child("Driver").child(username).child("jobFinished").setValue(ts);
             ref.child("Driver").child(username).child("jobStatus").setValue("On The Way Back");
+//            String jobAddress =  ref.child("Driver").child(username).child("job").getKey();
+//            ref.child("dataCollection").push().setValue(username,jobAddress);
 
         }
         return status + TextUtils.join( ", ", triggeringGeofencesList);

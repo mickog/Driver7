@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +38,13 @@ import static android.R.attr.name;
 public class ProfileActivity extends AppCompatActivity {
 
     static ProfileActivity instance;
-    private TextView tvEmail;
-        private Button buttonSave;
-    Button buttonStop;
-    Button logout;
-    private String userId;
+
+    ImageView logout;
     String username;
     FirebaseAuth firebaseAuth;
+    ImageView iv;
 
+    boolean red = true;
 
     /***************************On Create Method for when class is creates************************/
     @Override
@@ -53,40 +53,44 @@ public class ProfileActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        TextView textView = (TextView)findViewById(R.id.textView3);
         //create instance of this so I can reference it in the service(to send co-ordinates
         instance = this;
 
         //declare and initialise components
-        tvEmail = (TextView) findViewById(R.id.tvEmailProfile);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+
+        iv = (ImageView)findViewById(R.id.v);
+
+        iv.setImageResource(R.drawable.red);
+
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(red) {
+                    iv.setImageResource(R.drawable.green);
+                    startService(new Intent(getBaseContext(), LocationService.class));
+                    red = false;
+
+                }
+
+                else {
+                    iv.setImageResource(R.drawable.red);
+                    stopService(new Intent(getBaseContext(), LocationService.class));
+                    red = true;
+                }
+
+            }
+        });
+
         username = user.getDisplayName();
-        buttonSave = (Button) findViewById(R.id.start);
-        buttonStop = (Button) findViewById(R.id.stop);
-        logout = (Button) findViewById(R.id.logout);
+        textView.setText("Hello "+username+"\nREMEMBER, GREEN WILL SHARE YOUR LOCATION\n\nKEEP UP THE GOOD WORK!");
+
+        logout = (ImageView) findViewById(R.id.imageView5);
 
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);
-
-        //set on click listener for the stop button this will stop the service running
-        buttonStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stopService(new Intent(getBaseContext(),LocationService.class));
-
-            }
-        });
-
-        //set on click listener for the start button to start the service which generates users co-ordinates
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startService(new Intent(getBaseContext(),LocationService.class));
-                //updatetFirebase("Method man",2.001, 3.8882);
-            }
-
-        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,7 +264,7 @@ String jobTemp="none";
     /********************* Method to receive the co-ordinates and pass to the update firebase********************/
     public void receiveCo(Double x, Double y)
     {
-        Toast.makeText(this, "RECEIVING "+x+" AND "+y, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "RECEIVING "+x+" AND "+y, Toast.LENGTH_SHORT).show();
         updatetFirebase(x,y);
 
     }

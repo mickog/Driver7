@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -51,6 +52,11 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);
 //        textViewPersons = (TextView) findViewById(R.id.adminViewPerson);
+        ImageView iv = (ImageView)findViewById(R.id.compass);
+        iv.setImageResource(R.drawable.compass);
+
+        ImageView iv2 = (ImageView)findViewById(R.id.car);
+        iv2.setImageResource(R.drawable.car);
         optionList.add("HOME");
         optionList.add("VIEW DRIVERS");
         optionList.add("DESIGNATE A DRIVER");
