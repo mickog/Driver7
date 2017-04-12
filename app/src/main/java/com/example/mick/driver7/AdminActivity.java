@@ -1,20 +1,25 @@
 package com.example.mick.driver7;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +29,17 @@ import java.util.List;
  */
 
 public class AdminActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
-    private TextView textViewPersons;
-
-    Driver[] items = new Driver[2];
 
     final List<Driver> driverList = new ArrayList<Driver>();
-    ListView listView1;
     ArrayList<String> arrayNames;
     ArrayList<String> arrayLat;
     ArrayList<String> arrayLon;
     ArrayList<String> optionList = new ArrayList<String>();
-
+    private ListView listView;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
+    private ActionBarDrawerToggle mDrawerToggle;
+    FirebaseAuth firebaseAuth;
 
     /**************************** On Create Method for when class is creates************************/
     @Override
@@ -46,17 +51,84 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);
 //        textViewPersons = (TextView) findViewById(R.id.adminViewPerson);
+        optionList.add("HOME");
         optionList.add("VIEW DRIVERS");
         optionList.add("DESIGNATE A DRIVER");
         optionList.add("LOG OUT");
-        listView1 = (ListView) findViewById(R.id.lv);
-        ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this, android.R.layout.simple_list_item_1, optionList);
-        listView1.setAdapter(adapter);
-        listView1.setOnItemClickListener(this);
-        fillDriverList();
 
+
+        fillDriverList();
+/*************************************new stuff for oncreate******************************************************************/
+        listView = (ListView)findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionList);
+        listView.setAdapter(mAdapter);
+
+        listView.setOnItemClickListener(this);
+        setupDrawer();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
     }
+
+    /*************************************new stuff for oncreate******************************************************************/
+    private void setupDrawer() {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+//                getSupportActionBar().setTitle("Navigation!");
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+    }
+    /*************************************new stuff for oncreate******************************************************************/
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        // Activate the navigation drawer toggle
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /*************************************old stuff needed after this**********************************************************/
 
     public void fillDriverList() {
 
@@ -89,7 +161,7 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
                     if(d.getJobStatus().equals("Arrived at Job"))
                     {
                         ref.child("Driver").child(d.getName()).child("jobStatus").setValue("Completing transaction");
-                       Toast.makeText(AdminActivity.this,d.getName()+" has JUST just reached "+d.getJob()+" after"+(d.getJobFinished()-d.getJobStarted())/1000*60+" minutes",Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdminActivity.this,d.getName()+" has JUST just reached "+d.getJob()+" after"+(d.getJobFinished()-d.getJobStarted())/1000*60+" minutes",Toast.LENGTH_LONG).show();
 //                        d.setJobStatus(jobStatusWayBack);
                     }
                     if(d.getJobStatus().equals("On The Way Back"))
@@ -127,27 +199,26 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Driver d = driverList.get(position);
-//        Toast.makeText(this,"Clicked Driver "+d.getName()+" Lat is "+d.getLat()+" Lon is"+d.getLon(), Toast.LENGTH_SHORT).show();
 
 
-        if(position == 0) {
+        if(position == 1) {
             Intent intent = new Intent(this, MapA.class);
             intent.putStringArrayListExtra("arrayNames", arrayNames);
             intent.putStringArrayListExtra("arrayLat", arrayLat);
             intent.putStringArrayListExtra("arrayLon", arrayLon);
             startActivity(intent);
         }
-        else if(position == 1) {
+        else if(position == 2) {
             Intent intent = new Intent(this, DesignateDriver.class);
             intent.putStringArrayListExtra("arrayNames", arrayNames);
             startActivity(intent);
-//            Toast.makeText(this,"DESIGNATE A DRIVER ACTIVITY",Toast.LENGTH_SHORT).show();
 
         }
-        else if(position == 2) {
+        else if(position == 3) {
             Toast.makeText(this,"GOODBYE",Toast.LENGTH_SHORT).show();
-            System.exit(0);
+            firebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
 
         }
 

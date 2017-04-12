@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AdminActivity" android:layout_height="50px" android:layout_width="20px">
+    <item
+        android:id="@+id/action_Menu"
+        android:orderInCategory="100"
+        android:title="Menu"
+         >
+        <menu>
+            <item
+                android:id="@+id/instructions"
+                android:title="Instructions"
+                />
+            <item
+                android:id="@+id/hotels"
+                android:title="Hotels"
+                />
+
+        </menu>
+    </item>
+</menu>

@@ -20,8 +20,9 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustPan"
             >
-
-
+        <!--<activity  android:name=".AdminActivity"-->
+            <!--android:theme="@style/Theme.AppCompat"-->
+            <!--&gt;-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,13 +32,14 @@
 
         <activity
             android:name=".RegistrationActivity"
-            android:label="LOCATE DRIVERS"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
 
         <activity
             android:name=".AdminActivity"
-            android:label="LOCATE DRIVERS"
-            android:theme="@style/Theme.AppCompat" />
+            android:label=""
+            android:theme="@style/Theme.AppCompat"
+            />
         <activity
             android:name=".MapActivity"
             android:label="LOCATE DRIVERS"
@@ -49,7 +51,7 @@
         <activity
             android:name=".ProfileActivity"
             android:label="LOCATE DRIVERS"
-            android:theme="@style/Theme.AppCompat"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:launchMode="singleTask"
             />
         <activity

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,8 +33,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
@@ -41,6 +40,7 @@ public class RegistrationActivity extends AppCompatActivity {
         txtEmailAddress = (EditText) findViewById(R.id.txtEmailRegistration);
         txtPassword = (EditText) findViewById(R.id.txtPasswordRegistration);
         firebaseAuth = FirebaseAuth.getInstance();
+        Button btnRegister =(Button)findViewById(R.id.btnRegister);
     }
     public void btnRegistrationUser_Click(View v) {
         final String email = txtEmailAddress.getText().toString().trim();
