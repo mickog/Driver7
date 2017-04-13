@@ -42,6 +42,10 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
     private ActionBarDrawerToggle mDrawerToggle;
     FirebaseAuth firebaseAuth;
 
+   public void toastMessage()
+    {
+        Toast.makeText(this,"TOASTING ",Toast.LENGTH_LONG).show();
+    }
     /**************************** On Create Method for when class is creates************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +55,38 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_admin);
         //set the context sp we can use firebase
         Firebase.setAndroidContext(this);
-//        textViewPersons = (TextView) findViewById(R.id.adminViewPerson);
         ImageView iv = (ImageView)findViewById(R.id.compass);
         iv.setImageResource(R.drawable.compass);
 
+        iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminActivity.this.viewDrivers();
+
+            }
+        });
+
         ImageView iv2 = (ImageView)findViewById(R.id.car);
         iv2.setImageResource(R.drawable.car);
+
+        iv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminActivity.this.designateDriver();
+
+            }
+        });
+
+        ImageView iv3 = (ImageView)findViewById(R.id.exit);
+        iv3.setImageResource(R.drawable.exit);
+        iv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AdminActivity.this.exitApplication();
+            }
+        });
+
+
         optionList.add("HOME");
         optionList.add("VIEW DRIVERS");
         optionList.add("DESIGNATE A DRIVER");
@@ -64,7 +94,6 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
         fillDriverList();
-/*************************************new stuff for oncreate******************************************************************/
         listView = (ListView)findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionList);
@@ -156,38 +185,38 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
                 arrayNames = new ArrayList<String>();
                 arrayLat = new ArrayList<String>();
                 arrayLon = new ArrayList<String>();
+try {
+    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
 
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Driver d = postSnapshot.getValue(Driver.class);
+        Driver d = postSnapshot.getValue(Driver.class);
 //                    Toast.makeText(AdminActivity.this,"data snapshot Drivers name is "+d.getName(),Toast.LENGTH_SHORT).show();
 //                    textViewPersons.setText(details);
-                    System.out.println("data snapshot Drivers name is -------------------> "+d.getName());
-                    driverList.add(d);
-                    arrayNames.add(d.getName());
-                    if(d.getJobStatus().equals("Arrived at Job"))
-                    {
-                        ref.child("Driver").child(d.getName()).child("jobStatus").setValue("Completing transaction");
-                        Toast.makeText(AdminActivity.this,d.getName()+" has JUST just reached "+d.getJob()+" after"+(d.getJobFinished()-d.getJobStarted())/1000*60+" minutes",Toast.LENGTH_LONG).show();
-//                        d.setJobStatus(jobStatusWayBack);
-                    }
-                    if(d.getJobStatus().equals("On The Way Back"))
-                    {
-                        ref.child("Driver").child(d.getName()).child("jobStatus").setValue("ComingHome");
 
-                        Toast.makeText(AdminActivity.this,d.getName()+" is on the way back it took"+(d.getJobFinished()-d.getJobStarted())/1000/60+" minutes",Toast.LENGTH_LONG).show();
+        System.out.println("data snapshot Drivers name is -------------------> " + d.getName());
+        driverList.add(d);
+        arrayNames.add(d.getName());
+        if (d.getJobStatus().equals("Arrived at Job")) {
+            ref.child("Driver").child(d.getName()).child("jobStatus").setValue("Completing transaction");
+            Toast.makeText(AdminActivity.this, d.getName() + " has JUST just reached " + d.getJob() + " after" + (d.getJobFinished() - d.getJobStarted()) / 1000 * 60 + " minutes", Toast.LENGTH_LONG).show();
 //                        d.setJobStatus(jobStatusWayBack);
-                    }
-                    try{
-                        arrayLat.add(Double.toString(d.getLat()));
-                        arrayLon.add(Double.toString(d.getLon()));
+        }
+        if (d.getJobStatus().equals("On The Way Back")) {
+            ref.child("Driver").child(d.getName()).child("jobStatus").setValue("ComingHome");
+
+            Toast.makeText(AdminActivity.this, d.getName() + " is on the way back it took" + (d.getJobFinished() - d.getJobStarted()) / 1000 / 60 + " minutes", Toast.LENGTH_LONG).show();
+//                        d.setJobStatus(jobStatusWayBack);
+        }
+        try {
+            arrayLat.add(Double.toString(d.getLat()));
+            arrayLon.add(Double.toString(d.getLon()));
 //                    ArrayAdapter adapter = new ArrayAdapter(AdminActivity.this,android.R.layout.simple_list_item_1,driverList);
 //                    listView1.setAdapter(adapter);
 
-                    }catch(Exception e)
-                    {
-                        System.out.println("no coordinates to add");
-                    }
-                }
+        } catch (Exception e) {
+            System.out.println("no coordinates to add");
+        }
+    }
+}catch(Exception e){System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOO "+e);}
 
             }
 
@@ -208,26 +237,36 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
 
         if(position == 1) {
-            Intent intent = new Intent(this, MapA.class);
-            intent.putStringArrayListExtra("arrayNames", arrayNames);
-            intent.putStringArrayListExtra("arrayLat", arrayLat);
-            intent.putStringArrayListExtra("arrayLon", arrayLon);
-            startActivity(intent);
+            viewDrivers();
+
         }
         else if(position == 2) {
-            Intent intent = new Intent(this, DesignateDriver.class);
-            intent.putStringArrayListExtra("arrayNames", arrayNames);
-            startActivity(intent);
+            designateDriver();
+
 
         }
         else if(position == 3) {
-            Toast.makeText(this,"GOODBYE",Toast.LENGTH_SHORT).show();
-            firebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-
+//            Toast.makeText(this,"GOODBYE",Toast.LENGTH_SHORT).show();
+//            firebaseAuth.getInstance().signOut();
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            startActivity(intent);
+              exitApplication();
         }
 
+    }
+
+    private void viewDrivers() {
+        Intent intent = new Intent(this, MapA.class);
+        intent.putStringArrayListExtra("arrayNames", arrayNames);
+        intent.putStringArrayListExtra("arrayLat", arrayLat);
+        intent.putStringArrayListExtra("arrayLon", arrayLon);
+        startActivity(intent);
+    }
+
+    private void designateDriver() {
+        Intent intent = new Intent(this, DesignateDriver.class);
+        intent.putStringArrayListExtra("arrayNames", arrayNames);
+        startActivity(intent);
     }
 
     public void getCo(SnapShotListener listener) {
@@ -235,41 +274,48 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
 
     }
     public void fillDriverList(final SnapShotListener listener) {
+//try {
+    //Creating firebase object
+    Firebase ref = new Firebase(Config.FIREBASE_URL);
 
-        //Creating firebase object
-        Firebase ref = new Firebase(Config.FIREBASE_URL);
+    ref.child("Driver").addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            arrayLat = new ArrayList<String>();
+            arrayLon = new ArrayList<String>();
 
-        ref.child("Driver").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                arrayLat = new ArrayList<String>();
-                arrayLon = new ArrayList<String>();
+            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                Driver d = postSnapshot.getValue(Driver.class);
 
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Driver d = postSnapshot.getValue(Driver.class);
+                arrayLat.add(Double.toString(d.getLat()));
+                arrayLon.add(Double.toString(d.getLon()));
 
-                    arrayLat.add(Double.toString(d.getLat()));
-                    arrayLon.add(Double.toString(d.getLon()));
-
-
-                }
-                if (listener != null) {
-                    listener.onListFilled(arrayLat,arrayLon);
-                }
 
             }
-
-            /************
-             * had to implement this method
-             ****************/
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-                if (listener != null) {
-                    listener.onFailure();
-                }
+            if (listener != null) {
+                listener.onListFilled(arrayLat, arrayLon);
             }
-        });
+
+        }
+
+        /************
+         * had to implement this method
+         ****************/
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+            System.out.println("The read failed: " + firebaseError.getMessage());
+            if (listener != null) {
+                listener.onFailure();
+            }
+        }
+    });
+//}catch(Exception e){System.out.println("BBBBBBBBBBBBBBBBBBBBBBB "+e);}
     }
-
+    public void exitApplication()
+    {
+        Toast.makeText(this,"GOODBYE",Toast.LENGTH_SHORT).show();
+        firebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
 }

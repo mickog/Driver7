@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,14 +35,25 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.registration_activity);
 
         txtUsername = (EditText)findViewById((R.id.username)) ;
         txtEmailAddress = (EditText) findViewById(R.id.txtEmailRegistration);
         txtPassword = (EditText) findViewById(R.id.txtPasswordRegistration);
         firebaseAuth = FirebaseAuth.getInstance();
         Button btnRegister =(Button)findViewById(R.id.btnRegister);
+        TextView tv = (TextView)findViewById(R.id.link_to_login);
+        tv.setOnClickListener(new View.OnClickListener() {
+                                  @Override
+                                  public void onClick(View v) {
+                                      Intent i = new Intent(com.example.mick.driver7.RegistrationActivity.this, LoginActivity.class);
+                                      startActivity(i);
+                                  }
+                              }
+        );
+
     }
+
     public void btnRegistrationUser_Click(View v) {
         final String email = txtEmailAddress.getText().toString().trim();
         final String password = txtPassword.getText().toString().trim();

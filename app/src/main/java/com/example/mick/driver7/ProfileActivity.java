@@ -115,10 +115,15 @@ String jobTemp="none";
         //Creating firebase object
         final Firebase ref = new Firebase(Config.FIREBASE_URL);
 
+        ref.child("Driver").child(username).child("name").setValue(username.toString());
         ref.child("Driver").child(username).child("lat").setValue(lat);
         ref.child("Driver").child(username).child("lon").setValue(lon);
         ref.child("Driver").child(username).child("job").setValue(job);
         ref.child("Driver").child(username).child("jobStatus").setValue(jobStatus);
+//        ref.child("Driver").child(username).child("jobStarted").setValue(0);
+//        ref.child("Driver").child(username).child("jobFinished").setValue(0);
+
+
 //
 //
 //        //Adding values
