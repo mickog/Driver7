@@ -55,29 +55,35 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void btnRegistrationUser_Click(View v) {
-        final String email = txtEmailAddress.getText().toString().trim();
-        final String password = txtPassword.getText().toString().trim();
-        final String username = txtUsername.getText().toString().trim();
-        final ProgressDialog progressDialog = ProgressDialog.show(RegistrationActivity.this, "Please wait...", "Processing...", true);
-        (firebaseAuth.createUserWithEmailAndPassword(email,password ))
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
+        if (txtEmailAddress.getText().toString().trim().length()>0 && txtPassword.getText().toString().trim().length()>0 && txtUsername.getText().toString().trim().length()>0) {
+            final String email = txtEmailAddress.getText().toString().trim();
+            final String password = txtPassword.getText().toString().trim();
+            final String username = txtUsername.getText().toString().trim();
+            final ProgressDialog progressDialog = ProgressDialog.show(RegistrationActivity.this, "Please wait...", "Processing...", true);
+            (firebaseAuth.createUserWithEmailAndPassword(email, password))
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
 
-                        if (task.isSuccessful()) {
-                            //Sign in the user here
-                            signin(email,password,username);
+                            if (task.isSuccessful()) {
+                                //Sign in the user here
+                                signin(email, password, username);
 
+                            } else {
+                                Log.e("ERROR", task.getException().toString());
+                                Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else
-                        {
-                            Log.e("ERROR", task.getException().toString());
-                            Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+                    });
+        }     else
+                {
+                    Toast.makeText(RegistrationActivity.this, "You did not enter a username and password", Toast.LENGTH_LONG).show();
+
+                }
+
     }
+
 
     private void signin(String email, String password, final String username) {
         firebaseAuth.signInWithEmailAndPassword(email, password)

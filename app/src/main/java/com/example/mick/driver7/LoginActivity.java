@@ -44,33 +44,40 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
     public void btnUserLogin_Click(View v) {
-        final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait...", "Proccessing...", true);
+        if (txtEmailLogin.getText().toString().trim().length()>0 && txtPwd.getText().toString().trim().length()>0) {
+            final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Please wait...", "Proccessing...", true);
 
-        (firebaseAuth.signInWithEmailAndPassword(txtEmailLogin.getText().toString().trim(), txtPwd.getText().toString().trim()))
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
+            (firebaseAuth.signInWithEmailAndPassword(txtEmailLogin.getText().toString().trim(), txtPwd.getText().toString().trim()))
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
 
-                        if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
-                            String admin = "admin";
-                            if (firebaseAuth.getCurrentUser().getEmail().toLowerCase().contains(admin)) {
-                                Intent i = new Intent(LoginActivity.this, AdminActivity.class);
-                                i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
-                                startActivity(i);
+                            if (task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
+                                String admin = "admin";
+                                if (firebaseAuth.getCurrentUser().getEmail().toLowerCase().contains(admin)) {
+                                    Intent i = new Intent(LoginActivity.this, AdminActivity.class);
+                                    i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
+                                    startActivity(i);
+                                } else {
+                                    Intent i = new Intent(LoginActivity.this, ProfileActivity.class);
+                                    i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
+                                    startActivity(i);
+                                }
+                            } else {
+                                Log.e("ERROR", task.getException().toString());
+                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+
                             }
-                            else {
-                                Intent i = new Intent(LoginActivity.this, ProfileActivity.class);
-                                i.putExtra("Email", firebaseAuth.getCurrentUser().getEmail());
-                                startActivity(i);
-                            }
-                        } else {
-                            Log.e("ERROR", task.getException().toString());
-                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-
                         }
-                    }
-                });
+                    });
+        }
+        else
+        {
+            Toast.makeText(LoginActivity.this, "You did not enter a username and password", Toast.LENGTH_LONG).show();
+
+        }
     }
+
 }
