@@ -78,7 +78,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             if (flag==true) {
                 double geoLat = intent.getDoubleExtra("geoLat", 0.0);
                 double geoLon = intent.getDoubleExtra("geoLon", 0.0);
-                Toast.makeText(this, "Lat and Lon are " + geoLat + " " + geoLon, Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Lat and Lon are " + geoLat + " " + geoLon, Toast.LENGTH_LONG).show();
                 startGeofence(geoLat,geoLon);
 
 

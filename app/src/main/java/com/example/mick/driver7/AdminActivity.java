@@ -42,10 +42,10 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
     private ActionBarDrawerToggle mDrawerToggle;
     FirebaseAuth firebaseAuth;
 
-   public void toastMessage()
-    {
-        Toast.makeText(this,"TOASTING ",Toast.LENGTH_LONG).show();
-    }
+//   public void toastMessage()
+//    {
+//        Toast.makeText(this,"TOASTING ",Toast.LENGTH_LONG).show();
+//    }
     /**************************** On Create Method for when class is creates************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {

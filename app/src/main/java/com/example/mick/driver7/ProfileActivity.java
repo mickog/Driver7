@@ -85,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         username = user.getDisplayName();
-        textView.setText("Hello "+username+"\nREMEMBER, GREEN WILL SHARE YOUR LOCATION\n\nKEEP UP THE GOOD WORK!");
+        textView.setText("Hello "+username+"\nREMEMBER, GREEN WILL SHARE YOUR LOCATION\n\nSAFE DRIVING!");
 
         logout = (ImageView) findViewById(R.id.imageView5);
 
@@ -240,7 +240,7 @@ String jobTemp="none";
         }
 
 
-        String label = "ABC Label";
+        String label = "Destination";
         String uriBegin = "geo:" + latitude + "," + longitude;
         String query = latitude + "," + longitude + "(" + label + ")";
         String encodedQuery = Uri.encode(query);
