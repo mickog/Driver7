@@ -42,10 +42,6 @@ public class AdminActivity extends AppCompatActivity implements AdapterView.OnIt
     private ActionBarDrawerToggle mDrawerToggle;
     FirebaseAuth firebaseAuth;
 
-//   public void toastMessage()
-//    {
-//        Toast.makeText(this,"TOASTING ",Toast.LENGTH_LONG).show();
-//    }
     /**************************** On Create Method for when class is creates************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,13 +193,13 @@ try {
         arrayNames.add(d.getName());
         if (d.getJobStatus().equals("Arrived at Job")) {
             ref.child("Driver").child(d.getName()).child("jobStatus").setValue("Completing transaction");
-            Toast.makeText(AdminActivity.this, d.getName() + " has JUST just reached " + d.getJob() + " after" + (d.getJobFinished() - d.getJobStarted()) / 1000 * 60 + " minutes", Toast.LENGTH_LONG).show();
+            Toast.makeText(AdminActivity.this, d.getName() + " has JUST just reached " + d.getJob() + " after" + Math.abs((d.getJobFinished() - d.getJobStarted()) / 60) + " minutes", Toast.LENGTH_LONG).show();
 //                        d.setJobStatus(jobStatusWayBack);
         }
         if (d.getJobStatus().equals("On The Way Back")) {
             ref.child("Driver").child(d.getName()).child("jobStatus").setValue("ComingHome");
 
-            Toast.makeText(AdminActivity.this, d.getName() + " is on the way back it took" + (d.getJobFinished() - d.getJobStarted()) / 1000 / 60 + " minutes", Toast.LENGTH_LONG).show();
+            Toast.makeText(AdminActivity.this, d.getName() + " is on the way back it took" + Math.abs((d.getJobFinished() - d.getJobStarted()) / 60) + " minutes", Toast.LENGTH_LONG).show();
 //                        d.setJobStatus(jobStatusWayBack);
         }
         try {

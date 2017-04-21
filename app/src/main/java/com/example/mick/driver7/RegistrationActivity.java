@@ -93,8 +93,6 @@ public class RegistrationActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             //New Account is signed in and now the Current User
                             FirebaseUser user = firebaseAuth.getInstance().getCurrentUser();
-                            Toast.makeText(RegistrationActivity.this, "curr user is "+user.getEmail(), Toast.LENGTH_LONG).show();
-                            Toast.makeText(RegistrationActivity.this, "passed in username is "+username, Toast.LENGTH_LONG).show();
                             firebaseAuth.getInstance().signOut();
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -106,7 +104,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()) {
-                                                Toast.makeText(RegistrationActivity.this, " updated display name ", Toast.LENGTH_LONG).show();
+//                                                Toast.makeText(RegistrationActivity.this, " updated display name ", Toast.LENGTH_LONG).show();
 
                                             }
                                         }
