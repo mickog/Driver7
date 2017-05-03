@@ -1,6 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/round"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".Map">
     <item android:id="@+id/action_settings" android:title="settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="never"         android:background="@drawable/round"
+        />
 </menu>

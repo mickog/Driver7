@@ -269,12 +269,9 @@ String jobTemp="none";
     /********************* Method to receive the co-ordinates and pass to the update firebase********************/
     public void receiveCo(Double x, Double y)
     {
-//        Toast.makeText(this, "RECEIVING "+x+" AND "+y, Toast.LENGTH_SHORT).show();
         updatetFirebase(x,y);
 
     }
-    /********************* NEW GEOFENCE CODE****************************************************************/
-
 
 
 }

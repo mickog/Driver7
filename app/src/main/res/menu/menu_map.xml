@@ -1,7 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/round"
     tools:context="com.example.Mick.lab3.MapActivity">
     <item android:id="@+id/action_settings" android:title="Settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+        android:orderInCategory="100" app:showAsAction="never"         android:background="@drawable/round"
+        />
 </menu>

@@ -32,8 +32,10 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 public class LocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, ResultCallback<Status> {
 
-    private GoogleApiClient mLocationClient;
     ProfileActivity activity;
+
+    private GoogleApiClient mLocationClient;
+
 
     private Location mCurrentLocation;
     LocationRequest mLocationRequest;
@@ -41,6 +43,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // getting the static instance of activity
+        activity = ProfileActivity.instance;
+
         mLocationClient = new GoogleApiClient.Builder(LocationService.this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(LocationService.this)
@@ -54,8 +60,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
         mLocationRequest.setFastestInterval(1000);
         mLocationClient.connect();
 
-        // getting the static instance of activity
-        activity = ProfileActivity.instance;
 
     }
 
@@ -101,8 +105,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
             // we are calling here activity's method
             activity.receiveCo(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
         }
-//        Toast.makeText(this, "IN LOCATION CHANGED"+mCurrentLocation.getLatitude() +", "+ mCurrentLocation.getLatitude(), Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -157,13 +159,7 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private void startGeofence(double lat, double lon) {
         LatLng home = new LatLng(lat,lon);
         Geofence geofence = createGeofence(home , 100 );
-//        Toast.makeText(getBaseContext(), "sending geofences from service activity  ", Toast.LENGTH_SHORT).show();
-
-        Log.i(TAG, "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG is "+geofence.toString());
-
         GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
-        Log.i(TAG, "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH is "+geofenceRequest.toString());
-
         addGeofence( geofenceRequest );
         Log.i(TAG, "startGeofence()");
 
@@ -174,7 +170,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
 
     // Create a Geofence Request
     private GeofencingRequest createGeofenceRequest( Geofence geofence ) {
-        Log.d(TAG, "createGeofenceRequest");
         return new GeofencingRequest.Builder()
                 .setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_ENTER )
                 .addGeofence( geofence )
@@ -184,11 +179,10 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private static final String GEOFENCE_REQ_ID = "Delivery Destination";
 
     private Geofence createGeofence( LatLng latLng, float radius ) {
-        Log.d(TAG, "createGeofence---------------------->");
         return new Geofence.Builder()
                 .setRequestId(GEOFENCE_REQ_ID)
                 .setCircularRegion( latLng.latitude, latLng.longitude, radius)
-                .setExpirationDuration( 1000000 )
+                .setExpirationDuration( 7200000 )
                 .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
                         | Geofence.GEOFENCE_TRANSITION_EXIT )
                 .build();
@@ -197,8 +191,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     // *********************Add the created GeofenceRequest to the device's monitoring list**********/
     private void addGeofence(GeofencingRequest request) {
         if (checkPermission())
-            Log.d(TAG, "addGeofenceAAAAAAAAAAAAAAAAAaBBBBBBBBBBBBBBBBBB" +checkPermission());
-
         LocationServices.GeofencingApi.addGeofences(
                     mLocationClient,
                     request,
@@ -209,7 +201,6 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private boolean checkPermission() {
         boolean perm = (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED );
-        Log.d(TAG, "checkPermission() isSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSs "+perm);
         // Ask for permission if it wasn't granted yet
         return (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED );
@@ -219,16 +210,12 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     private PendingIntent geoFencePendingIntent;
     private final int GEOFENCE_REQ_CODE = 0;
     private PendingIntent createGeofencePendingIntent() {
-        Log.d(TAG, "createGeofencePendingIntent");
-        if ( geoFencePendingIntent != null ) {
-            Log.d(TAG, "createGeofencePendingIntent is not null it is "+geoFencePendingIntent.toString());
 
+        if ( geoFencePendingIntent != null ) {
             return geoFencePendingIntent;
         }
 
         Intent intent = new Intent( this, GeofenceTransitionService.class);
-        Log.d(TAG, "returning intent "+intent.toString());
-
         return PendingIntent.getService(
                 this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT );
     }

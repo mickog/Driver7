@@ -4,7 +4,7 @@ package com.example.mick.driver7;
  * Created by Mick on 12/04/2017.
  */
 public class DataCollection {
-    String driver,job,timeTook;
+    String driver,job,time;
 
     public String getDriver() {
         return driver;
@@ -22,11 +22,11 @@ public class DataCollection {
         this.job = job;
     }
 
-    public String getTimeTook() {
-        return timeTook;
+    public String getTime() {
+        return time;
     }
 
-    public void setTimeTook(String timeTook) {
-        this.timeTook = timeTook;
+    public void setTime(String timeTook) {
+        this.time = timeTook;
     }
 }

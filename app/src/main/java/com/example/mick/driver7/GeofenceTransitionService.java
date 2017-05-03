@@ -55,8 +55,6 @@ public class GeofenceTransitionService extends IntentService {
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent1);
         //just printing for debugging purposes
-        System.out.println( "TEST1 username is "+username);
-
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         // Handling errors
         if ( geofencingEvent.hasError() ) {
@@ -72,10 +70,8 @@ public class GeofenceTransitionService extends IntentService {
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
             // Get the geofence that were triggered
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-
             //this will call the method
             String geofenceTransitionDetails = getDetailsToDisplay(geoFenceTransition, triggeringGeofences );
-
             // Send notification details as a String
             sendNotification( geofenceTransitionDetails );
         }
@@ -106,17 +102,18 @@ public class GeofenceTransitionService extends IntentService {
                 }
 
             });
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
             DataCollection dcc = new DataCollection();
             dcc.setDriver(username);
             dcc.setJob(jobAddress);
-            dcc.setTimeTook("10 minutes");
+            dcc.setTime(ts);
             ref.child("dataCollection").push().setValue(dcc);
             status = "Entering ";
             ref.child("Driver").child(username).child("jobStatus").setValue("Arrived at Job");
 
             //update firebase table based on the driver reaching or leaving the destination
-            Long tsLong = System.currentTimeMillis()/1000;
-            String ts = tsLong.toString();
+
 
             ref.child("Driver").child(username).child("jobFinished").setValue(ts);
 
@@ -162,14 +159,12 @@ public class GeofenceTransitionService extends IntentService {
 
     // Create notification
     private Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
-        System.out.println( "TEST4");
-
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
         notificationBuilder
                 .setSmallIcon(R.drawable.ic_action_location)
                 .setColor(Color.RED)
                 .setContentTitle(msg)
-                .setContentText("Time Notification")
+                .setContentText("Entering Geofence")
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .setAutoCancel(true);

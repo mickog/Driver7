@@ -12,15 +12,15 @@
         android:allowBackup="true"
         android:label="LD Pro"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/Theme.AppCompat"
+        >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBVyujWsd90ek7p2olB_BYbSUcExeRxF64" />
         <activity
-            android:name=".LoginActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustResize"            >
-
+        android:name=".LoginActivity"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:windowSoftInputMode="adjustResize"            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,29 +32,28 @@
             android:name=".RegistrationActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             />
-
         <activity
             android:name=".AdminActivity"
-            android:label=""
-            android:theme="@style/Theme.AppCompat"
-            />
+            android:label="LDPro"
+            android:theme="@style/Theme.AppCompat" />
+
         <activity
             android:name=".MapActivity"
-            android:label="LOCATE DRIVERS"
+            android:label="LDPro"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".MapA"
-            android:label="LOCATE DRIVERS"
+            android:label="LDPro"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".ProfileActivity"
-            android:label="LOCATE DRIVERS"
+            android:label="LDPro"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:launchMode="singleTask"
             />
         <activity
             android:name=".DesignateDriver"
-            android:label="LOCATE DRIVERS"
+            android:label="LDPro"
             android:theme="@style/Theme.AppCompat" />
 
         <service

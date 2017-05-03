@@ -34,7 +34,7 @@ android:id="@+id/navList"
 android:layout_width="200dp"
 android:layout_height="match_parent"
 android:layout_gravity="left|start"
-android:background="@android:color/black"
+    android:background="@android:color/holo_blue_bright"
 android:visibility="visible" />
 
     </android.support.v4.widget.DrawerLayout>

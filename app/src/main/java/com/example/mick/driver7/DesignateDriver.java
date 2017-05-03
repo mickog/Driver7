@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
     ArrayList<String> optionList = new ArrayList<String>();
     ArrayAdapter adapter1;
     FirebaseAuth firebaseAuth;
+    ImageView iv;
+    ImageView iv2;
 
 
 
@@ -52,7 +55,8 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
 
         Firebase.setAndroidContext(this);
         listView = (ListView) findViewById(R.id.lvCust);
-
+        iv = (ImageView)findViewById(R.id.imageView6);
+        iv2 = (ImageView)findViewById(R.id.imageView7);
         listView.setOnItemClickListener(this);
 
         fillCustomerList();
@@ -201,32 +205,6 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//        Toast.makeText(this," id is "+id,Toast.LENGTH_LONG).show();
-//        if(parent==listView1.getParent()) {
-
-//            if (position == 0) {
-//                Intent intent = new Intent(this, AdminActivity.class);
-//                startActivity(intent);
-//            }
-//
-//            if (position == 1) {
-//                Intent intent = new Intent(this, MapA.class);
-//                intent.putStringArrayListExtra("arrayNames", arrayNames);
-////                intent.putStringArrayListExtra("arrayLat", arrayLat);
-////                intent.putStringArrayListExtra("arrayLon", arrayLon);
-//                startActivity(intent);
-//            } else if (position == 2) {
-//                Intent intent = new Intent(this, DesignateDriver.class);
-//                intent.putStringArrayListExtra("arrayNames", arrayNames);
-//                startActivity(intent);
-//
-//            } else if (position == 3) {
-//                Toast.makeText(this, "GOODBYE", Toast.LENGTH_SHORT).show();
-//                System.exit(0);
-//
-//            }
-//        }
-
          if(listView.getAdapter()==adapter)
         {
             chosenAddress = addressList.get(position);
@@ -243,9 +221,11 @@ public class DesignateDriver extends AppCompatActivity implements AdapterView.On
     }
 
     private void chooseDriver(Customer customer) {
-
+        iv.setImageResource(R.drawable.user);
+        iv2.setImageResource(R.drawable.driv);
         adapter1 = new ArrayAdapter(DesignateDriver.this,android.R.layout.simple_list_item_1,arrayNames);
         listView.setAdapter(adapter1);
+
 
     }
 

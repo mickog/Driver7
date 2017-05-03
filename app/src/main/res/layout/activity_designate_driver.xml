@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_bright"
+    >
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_designate_driver"
     android:layout_width="match_parent"
@@ -15,18 +18,50 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.mick.driver7.DesignateDriver">
+    tools:context="com.example.mick.driver7.DesignateDriver"
+    android:orientation="vertical"
+    android:weightSum="1">
 
 
     <ListView
+        android:id="@+id/lvCust"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="34dp"
-        android:id="@+id/lvCust" />
+        android:layout_height="202dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round"
+        android:dividerHeight="2dp"></ListView>
+<LinearLayout android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="127dp"
+        android:layout_height="wrap_content"
+        android:paddingRight="15dp"
+        app:srcCompat="@drawable/house" />
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_gravity="left"
+        android:id="@+id/imageView7"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="73dp"
+        android:layout_marginEnd="24dp"
+        android:cropToPadding="false"
+        app:srcCompat="@drawable/adds"
+        android:scaleType="fitStart"
+        />
 </RelativeLayout>
+</LinearLayout>
+
+</LinearLayout>
 
     <!-- Side navigation drawer UI -->
     <ListView
@@ -34,7 +69,7 @@
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
-        android:background="@android:color/black"
+        android:background="@android:color/holo_blue_bright"
         android:visibility="visible" />
 
 </android.support.v4.widget.DrawerLayout>
